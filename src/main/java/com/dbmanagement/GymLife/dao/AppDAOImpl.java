@@ -27,4 +27,19 @@ public class AppDAOImpl implements AppDAO {
     public void save(BankAccount thisBankAccount) {
         entityManager.persist(thisBankAccount);
     }
+
+    @Override
+    public BankAccount findBankAccountByAccountNumber(String theAccountNumber) {
+        return entityManager.find(BankAccount.class, theAccountNumber);
+    }
+
+    @Override
+    @Transactional
+    public void deleteBankAccountByAccountNumber(String theAccountNumber) {
+        // retrieve the correct bank account
+        BankAccount theBankAccount = findBankAccountByAccountNumber(theAccountNumber);
+
+        // remove the bank account
+        entityManager.remove(theBankAccount);
+    }
 }

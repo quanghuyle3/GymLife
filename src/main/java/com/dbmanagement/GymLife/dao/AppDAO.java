@@ -6,4 +6,8 @@ public interface AppDAO {
 
     // Bank Account
     void save(BankAccount thisBankAccount);
+
+    BankAccount findBankAccountByAccountNumber(String theAccountNumber);
+
+    void deleteBankAccountByAccountNumber(String theAccountNumber);
 }
