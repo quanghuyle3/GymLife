@@ -4,6 +4,9 @@ DROP USER IF EXISTS 'gymlife'@'localhost';
 -- Create new user
 CREATE USER 'gymlife'@'localhost' IDENTIFIED BY 'gymlife';
 
+-- Drop database schema if exists
+-- DROP SCHEMA IF EXISTS gym_life;
+
 -- Create a new database schema
 CREATE SCHEMA IF NOT EXISTS gym_life;
 
