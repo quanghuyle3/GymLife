@@ -1,8 +1,10 @@
 package com.dbmanagement.GymLife.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -21,6 +23,10 @@ public class BankAccount {
 
     @Column(name = "remaining_balance_owed")
     private double remainingBalanceOwed;
+
+    @OneToOne(mappedBy = "bankAccount", cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
+            CascadeType.REFRESH })
+    private Manufacture manufacture;
 
     public BankAccount() {
     }
@@ -61,6 +67,14 @@ public class BankAccount {
 
     public void setRemainingBalanceOwed(double remainingBalanceOwed) {
         this.remainingBalanceOwed = remainingBalanceOwed;
+    }
+
+    public Manufacture getManufacture() {
+        return manufacture;
+    }
+
+    public void setManufacture(Manufacture manufacture) {
+        this.manufacture = manufacture;
     }
 
     @Override
