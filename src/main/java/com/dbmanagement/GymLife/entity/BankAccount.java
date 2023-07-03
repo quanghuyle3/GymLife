@@ -1,9 +1,12 @@
 package com.dbmanagement.GymLife.entity;
 
+import java.util.List;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -27,6 +30,14 @@ public class BankAccount {
     @OneToOne(mappedBy = "bankAccount", cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
             CascadeType.REFRESH })
     private Manufacture manufacture;
+
+    @OneToMany(mappedBy = "accountSend", cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
+            CascadeType.REFRESH })
+    private List<Transaction> transactionSend;
+
+    @OneToMany(mappedBy = "accountReceive", cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
+            CascadeType.REFRESH })
+    private List<Transaction> transactionReceive;
 
     public BankAccount() {
     }
@@ -75,6 +86,22 @@ public class BankAccount {
 
     public void setManufacture(Manufacture manufacture) {
         this.manufacture = manufacture;
+    }
+
+    public List<Transaction> getTransactionSend() {
+        return transactionSend;
+    }
+
+    public void setTransactionSend(List<Transaction> transactionSend) {
+        this.transactionSend = transactionSend;
+    }
+
+    public List<Transaction> getTransactionReceive() {
+        return transactionReceive;
+    }
+
+    public void setTransactionReceive(List<Transaction> transactionReceive) {
+        this.transactionReceive = transactionReceive;
     }
 
     @Override
