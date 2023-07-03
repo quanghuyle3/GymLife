@@ -1,11 +1,17 @@
 package com.dbmanagement.GymLife.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.management.AttributeList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dbmanagement.GymLife.entity.BankAccount;
 import com.dbmanagement.GymLife.entity.Manufacture;
+import com.dbmanagement.GymLife.entity.Transaction;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
@@ -33,6 +39,21 @@ public class AppDAOImpl implements AppDAO {
     @Override
     public BankAccount findBankAccountByAccountNumber(String theAccountNumber) {
         return entityManager.find(BankAccount.class, theAccountNumber);
+    }
+
+    @Override
+    public void retrieveTransactionSendByBankAccount(BankAccount bankAccount) {
+        TypedQuery<Transaction> query = entityManager
+                .createQuery("select t from Transaction t where t.accountSend = :data", Transaction.class);
+        query.setParameter("data", bankAccount);
+
+        try {
+            bankAccount.setTransactionSend(query.getResultList());
+        }
+        // empty transaction case
+        catch (Exception e) {
+            bankAccount.setTransactionSend(new ArrayList<>());
+        }
     }
 
     @Override
@@ -95,6 +116,14 @@ public class AppDAOImpl implements AppDAO {
 
         // delete the manufacture
         entityManager.remove(manufacture);
+    }
+
+    // TRANSACTION
+
+    @Override
+    @Transactional
+    public void save(Transaction thisTransaction) {
+        entityManager.persist(thisTransaction);
     }
 
 }

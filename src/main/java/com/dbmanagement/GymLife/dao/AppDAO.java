@@ -1,7 +1,10 @@
 package com.dbmanagement.GymLife.dao;
 
+import java.util.List;
+
 import com.dbmanagement.GymLife.entity.BankAccount;
 import com.dbmanagement.GymLife.entity.Manufacture;
+import com.dbmanagement.GymLife.entity.Transaction;
 
 public interface AppDAO {
 
@@ -9,6 +12,8 @@ public interface AppDAO {
     void save(BankAccount thisBankAccount);
 
     BankAccount findBankAccountByAccountNumber(String theAccountNumber);
+
+    void retrieveTransactionSendByBankAccount(BankAccount bankAccount);
 
     void update(BankAccount thisBankAccount);
 
@@ -24,5 +29,8 @@ public interface AppDAO {
     void update(Manufacture thisManufacture);
 
     void deleteManufactureById(int theId);
+
+    // Transaction
+    void save(Transaction thisTransaction);
 
 }
