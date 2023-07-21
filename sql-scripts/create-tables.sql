@@ -33,8 +33,7 @@ CREATE TABLE equipment (
 		serials VARCHAR(30) PRIMARY KEY,
         name VARCHAR(100) NOT NULL,
         target VARCHAR(50),
-        manufacture_id INT,
-        transaction_id INT, 
+        transaction_id INT NOT NULL, 
         date_imported DATE,
         CONSTRAINT manufacture_fk FOREIGN KEY (manufacture_id) REFERENCES manufacture(id),
         CONSTRAINT transaction_fk FOREIGN KEY (transaction_id) REFERENCES transaction(id));
