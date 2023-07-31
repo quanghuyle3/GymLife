@@ -39,6 +39,10 @@ public class BankAccount {
             CascadeType.REFRESH })
     private List<Transaction> transactionReceive;
 
+    @OneToOne(mappedBy = "bankAccountNumber", cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
+            CascadeType.REFRESH })
+    private Member member;
+
     public BankAccount() {
     }
 
@@ -108,6 +112,14 @@ public class BankAccount {
     public String toString() {
         return "BankAccount [accountNumber=" + accountNumber + ", bankName=" + bankName + ", routineNumber="
                 + routineNumber + ", remainingBalanceOwed=" + remainingBalanceOwed + "]";
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
     }
 
 }
