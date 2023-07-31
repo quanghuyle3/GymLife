@@ -1,10 +1,14 @@
 package com.dbmanagement.GymLife.entity;
 
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -21,6 +25,10 @@ public class Membership {
 
     @Column(name = "price")
     private double price;
+
+    @OneToMany(mappedBy = "membershipType", cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
+            CascadeType.REFRESH })
+    private List<Member> members;
 
     public Membership() {
     }
@@ -57,6 +65,14 @@ public class Membership {
     @Override
     public String toString() {
         return "Membership [id=" + id + ", typeName=" + typeName + ", price=" + price + "]";
+    }
+
+    public List<Member> getMembers() {
+        return members;
+    }
+
+    public void setMembers(List<Member> members) {
+        this.members = members;
     }
 
 }
