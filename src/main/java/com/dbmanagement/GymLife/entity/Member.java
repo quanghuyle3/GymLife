@@ -1,5 +1,7 @@
 package com.dbmanagement.GymLife.entity;
 
+import java.util.List;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -65,6 +68,13 @@ public class Member {
             CascadeType.REFRESH })
     @JoinColumn(name = "bank_account_number")
     private BankAccount bankAccountNumber;
+
+    @OneToMany(mappedBy = "memberId", cascade = { CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.REFRESH })
+    private List<AccessLog> accessLogs;
+
+    @OneToMany(mappedBy = "staffId", cascade = CascadeType.ALL)
+    private List<WorkSchedule> workSchedules;
 
     public Member() {
     }
@@ -216,6 +226,22 @@ public class Member {
                 + membershipType + ", date_join=" + dateJoin + ", date_expiration=" +
                 dateExpiration + ", active="
                 + active + ", bankAccountNumber=" + bankAccountNumber + "]";
+    }
+
+    public List<AccessLog> getAccessLogs() {
+        return accessLogs;
+    }
+
+    public void setAccessLogs(List<AccessLog> accessLogs) {
+        this.accessLogs = accessLogs;
+    }
+
+    public List<WorkSchedule> getWorkSchedules() {
+        return workSchedules;
+    }
+
+    public void setWorkSchedules(List<WorkSchedule> workSchedules) {
+        this.workSchedules = workSchedules;
     }
 
 }
