@@ -2,9 +2,14 @@ package com.dbmanagement.GymLife.dao;
 
 import java.util.List;
 
+import com.dbmanagement.GymLife.entity.AccessLog;
 import com.dbmanagement.GymLife.entity.BankAccount;
+import com.dbmanagement.GymLife.entity.Equipment;
 import com.dbmanagement.GymLife.entity.Manufacture;
+import com.dbmanagement.GymLife.entity.Member;
+import com.dbmanagement.GymLife.entity.Membership;
 import com.dbmanagement.GymLife.entity.Transaction;
+import com.dbmanagement.GymLife.entity.WorkSchedule;
 
 public interface AppDAO {
 
@@ -14,6 +19,8 @@ public interface AppDAO {
     BankAccount findBankAccountByAccountNumber(String theAccountNumber);
 
     void retrieveTransactionSendByBankAccount(BankAccount bankAccount);
+
+    void retrieveTransactionReceiveByBankAccount(BankAccount bankAccount);
 
     void update(BankAccount thisBankAccount);
 
@@ -32,5 +39,61 @@ public interface AppDAO {
 
     // Transaction
     void save(Transaction thisTransaction);
+
+    Transaction findTransactionById(int id);
+
+    // Equipment
+    void save(Equipment thisEquipment);
+
+    Equipment findEquipmentBySerials(String serials);
+
+    void update(Equipment thisEquipment);
+
+    void deleteEquipmentBySerials(String serials);
+
+    // Membership
+    void save(Membership thisMembership);
+
+    Membership findMembershipById(int id);
+
+    void update(Membership thisMembership);
+
+    void deleteMembershipById(int id);
+
+    void retrieveMembersByMembership(Membership thisMembership);
+
+    // Member
+    void save(Member thisMember);
+
+    Member findMemberById(int id);
+
+    void update(Member thisMember);
+
+    void deleteMemberById(int id);
+
+    Member findMemberByBankAccount(BankAccount bankAccount);
+
+    void retrieveAccessLogsByMember(Member thisMember);
+
+    void retrieveWorkSchedulesByMember(Member thisMember);
+
+    // Access Log
+    void save(AccessLog thisAccessLog);
+
+    AccessLog findAccessLogById(int id);
+
+    void update(AccessLog thisAccessLog);
+    // no delete method
+
+    // Work Schedule
+    void save(WorkSchedule thisWorkSchedule);
+
+    WorkSchedule findWorkScheduleById(int id);
+
+    List<WorkSchedule> retrieveAllWorkSchedule();
+
+    void update(WorkSchedule thisWorkSchedule);
+
+    void deleteWorkScheduleById(int id);
 
 }
