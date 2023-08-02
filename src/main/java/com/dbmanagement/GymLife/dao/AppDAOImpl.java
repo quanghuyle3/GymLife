@@ -1,6 +1,7 @@
 package com.dbmanagement.GymLife.dao;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.management.AttributeList;
@@ -15,6 +16,8 @@ import com.dbmanagement.GymLife.entity.Equipment;
 import com.dbmanagement.GymLife.entity.Manufacture;
 import com.dbmanagement.GymLife.entity.Member;
 import com.dbmanagement.GymLife.entity.Membership;
+import com.dbmanagement.GymLife.entity.Role;
+import com.dbmanagement.GymLife.entity.Training;
 import com.dbmanagement.GymLife.entity.Transaction;
 import com.dbmanagement.GymLife.entity.WorkSchedule;
 
@@ -349,6 +352,184 @@ public class AppDAOImpl implements AppDAO {
         catch (Exception e) {
             thisMember.setWorkSchedules(new ArrayList<>());
         }
+    }
+
+    // TRAINING
+    @Override
+    @Transactional
+    public void save(Training thisTraining) {
+        entityManager.persist(thisTraining);
+    }
+
+    @Override
+    public Training findTrainingById(int id) {
+        return entityManager.find(Training.class, id);
+    }
+
+    @Override
+    public List<Training> retrieveAllTraining() {
+        TypedQuery<Training> query = entityManager.createQuery("select t from Training t",
+                Training.class);
+
+        List<Training> result = null;
+        try {
+            result = query.getResultList();
+        } catch (Exception e) {
+            result = new ArrayList<>();
+        }
+
+        return result;
+    }
+
+    @Override
+    @Transactional
+    public void update(Training thisTraining) {
+        entityManager.merge(thisTraining);
+    }
+
+    @Override
+    @Transactional
+    public void deleteTrainingById(int id) {
+        entityManager.remove(entityManager.find(Training.class, id));
+    }
+
+    @Override
+    public void retrieveTrainingAsTrainerByMember(Member thisMember) {
+        TypedQuery<Training> query = entityManager.createQuery(
+                "select t from Training t where t.trainerId = :data",
+                Training.class);
+
+        query.setParameter("data", thisMember);
+
+        try {
+            thisMember.setTrainingsAsTrainer(query.getResultList());
+        }
+        // empty accessLog case
+        catch (Exception e) {
+            thisMember.setTrainingsAsTrainer(new ArrayList<>());
+        }
+    }
+
+    @Override
+    public void retrieveTrainingAsStudentByMember(Member thisMember) {
+        TypedQuery<Training> query = entityManager.createQuery(
+                "select t from Training t where t.studentId = :data",
+                Training.class);
+
+        query.setParameter("data", thisMember);
+
+        try {
+            thisMember.setTrainingsAsStudent(query.getResultList());
+        }
+        // empty accessLog case
+        catch (Exception e) {
+            thisMember.setTrainingsAsStudent(new ArrayList<>());
+        }
+    }
+
+    // ROLE
+    @Override
+    @Transactional
+    public void save(Role thisRole) {
+        entityManager.persist(thisRole);
+    }
+
+    @Override
+    public Role findRoleById(int id) {
+        return entityManager.find(Role.class, id);
+    }
+
+    @Override
+    public List<Role> retrieveAllRole() {
+        TypedQuery<Role> query = entityManager.createQuery("select r from Role r",
+                Role.class);
+
+        List<Role> result = null;
+
+        try {
+
+            result = query.getResultList();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            result = new ArrayList<>();
+        }
+
+        return result;
+    }
+
+    @Override
+    @Transactional
+    public void update(Role thisRole) {
+        entityManager.merge(thisRole);
+    }
+
+    @Override
+    @Transactional
+    public void deleteRoleById(int id) {
+        entityManager.remove(entityManager.find(Role.class, id));
+    }
+
+    @Override
+    public Role retrieveARoleWithItsMembers(int id) {
+        TypedQuery<Role> query = entityManager.createQuery("select r from Role r "
+                + "JOIN FETCH r.members "
+                + "where r.id = :data",
+                Role.class);
+
+        query.setParameter("data", id);
+
+        Role tempRole;
+        try {
+            tempRole = query.getSingleResult();
+        }
+        // empty corresponding members
+        catch (Exception e) {
+            tempRole = findRoleById(id);
+            tempRole.setMembers(new ArrayList<>());
+        }
+
+        return tempRole;
+    }
+
+    @Override
+    public Member retrieveAMemberWithItsRoles(int id) {
+        TypedQuery<Member> query = entityManager.createQuery("select m from Member m "
+                + "JOIN FETCH m.roles "
+                + "where m.id = :data",
+                Member.class);
+
+        query.setParameter("data", id);
+
+        Member tempMember;
+        try {
+            tempMember = query.getSingleResult();
+        }
+        // empty corresponding members
+        catch (Exception e) {
+            tempMember = findMemberById(id);
+            tempMember.setRoles(new ArrayList<>());
+        }
+
+        return tempMember;
+    }
+
+    @Override
+    @Transactional
+    public void deleteMemberWithItsRoles(int id) {
+        // retrieve the correct member with its roles
+        Member member = retrieveAMemberWithItsRoles(id);
+
+        // Remove the association that Member has on its Role
+        for (Role role : member.getRoles()) {
+            retrieveARoleWithItsMembers(role.getId()).getMembers().remove(member);
+        }
+        // remove all roles
+        // member.setRoles(null);
+        member.getRoles().clear();
+
+        // update to db
+        entityManager.remove(member);
+
     }
 
 }

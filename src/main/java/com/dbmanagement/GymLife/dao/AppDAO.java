@@ -8,6 +8,8 @@ import com.dbmanagement.GymLife.entity.Equipment;
 import com.dbmanagement.GymLife.entity.Manufacture;
 import com.dbmanagement.GymLife.entity.Member;
 import com.dbmanagement.GymLife.entity.Membership;
+import com.dbmanagement.GymLife.entity.Role;
+import com.dbmanagement.GymLife.entity.Training;
 import com.dbmanagement.GymLife.entity.Transaction;
 import com.dbmanagement.GymLife.entity.WorkSchedule;
 
@@ -77,6 +79,14 @@ public interface AppDAO {
 
     void retrieveWorkSchedulesByMember(Member thisMember);
 
+    void retrieveTrainingAsTrainerByMember(Member thisMember);
+
+    void retrieveTrainingAsStudentByMember(Member thisMember);
+
+    Member retrieveAMemberWithItsRoles(int id);
+
+    void deleteMemberWithItsRoles(int id);
+
     // Access Log
     void save(AccessLog thisAccessLog);
 
@@ -95,5 +105,29 @@ public interface AppDAO {
     void update(WorkSchedule thisWorkSchedule);
 
     void deleteWorkScheduleById(int id);
+
+    // Training
+    void save(Training thisTraining);
+
+    Training findTrainingById(int id);
+
+    List<Training> retrieveAllTraining();
+
+    void update(Training thisTraining);
+
+    void deleteTrainingById(int id);
+
+    // Role
+    void save(Role thisRole);
+
+    Role findRoleById(int id);
+
+    List<Role> retrieveAllRole();
+
+    void update(Role thisRole);
+
+    void deleteRoleById(int id);
+
+    Role retrieveARoleWithItsMembers(int id);
 
 }
