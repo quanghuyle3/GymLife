@@ -22,6 +22,7 @@ import com.dbmanagement.GymLife.entity.Transaction;
 import com.dbmanagement.GymLife.entity.WorkSchedule;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 
 @Repository
@@ -242,7 +243,21 @@ public class AppDAOImpl implements AppDAO {
     @Override
     @Transactional
     public void deleteMemberById(int id) {
-        entityManager.remove(entityManager.find(Member.class, id));
+        // retrieve the correct member with its roles
+        Member member = entityManager.find(Member.class, id);
+        entityManager.remove(member);
+        // Member member = retrieveAMemberWithItsRoles(id);
+
+        // // Remove the association that Member has on its Role
+        // for (Role role : member.getRoles()) {
+        // retrieveARoleWithItsMembers(role.getId()).getMembers().remove(member);
+        // }
+        // // remove all roles
+        // // member.setRoles(null);
+        // member.getRoles().clear();
+
+        // // update to db
+        // entityManager.remove(member);
     }
 
     @Override
@@ -515,6 +530,7 @@ public class AppDAOImpl implements AppDAO {
 
     @Override
     @Transactional
+    // [Archive] the deleteMemberById can achieve this function
     public void deleteMemberWithItsRoles(int id) {
         // retrieve the correct member with its roles
         Member member = retrieveAMemberWithItsRoles(id);
@@ -532,4 +548,30 @@ public class AppDAOImpl implements AppDAO {
 
     }
 
+    @Override
+    @Transactional
+    public void deleteTrainingWorkScheduleAccessLogOfAMember(int id) {
+
+        // delete access log
+        Query query = entityManager.createQuery("delete from AccessLog al where al.memberId.id = :data");
+
+        query.setParameter("data", id);
+
+        query.executeUpdate();
+
+        // delete work schedule
+        query = entityManager.createQuery("delete from WorkSchedule ws where ws.staffId.id = :data");
+
+        query.setParameter("data", id);
+
+        query.executeUpdate();
+
+        // delete work schedule
+        query = entityManager
+                .createQuery("delete from Training t where t.trainerId.id = :data or t.studentId.id = :data");
+
+        query.setParameter("data", id);
+
+        query.executeUpdate();
+    }
 }

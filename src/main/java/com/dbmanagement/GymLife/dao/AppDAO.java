@@ -87,6 +87,8 @@ public interface AppDAO {
 
     void deleteMemberWithItsRoles(int id);
 
+    void deleteTrainingWorkScheduleAccessLogOfAMember(int id);
+
     // Access Log
     void save(AccessLog thisAccessLog);
 
