@@ -99,7 +99,7 @@ public class Member {
 
     public Member(String email, String userName, String password, String firstName, String lastName,
             String address, String phoneNumber, String dateOfBirth, String gender,
-            String dateJoin, BankAccount bankAccountNumber) {
+            String dateJoin) {
         this.email = email;
         this.userName = userName;
         this.password = password;
@@ -110,7 +110,6 @@ public class Member {
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
         this.dateJoin = dateJoin;
-        this.bankAccountNumber = bankAccountNumber;
     }
 
     public int getId() {
