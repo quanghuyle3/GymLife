@@ -1,14 +1,19 @@
 package com.dbmanagement.GymLife.entity;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -75,6 +80,19 @@ public class Member {
 
     @OneToMany(mappedBy = "staffId", cascade = CascadeType.ALL)
     private List<WorkSchedule> workSchedules;
+
+    @OneToMany(mappedBy = "trainerId", cascade = { CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.REFRESH })
+    private List<Training> trainingsAsTrainer;
+
+    @OneToMany(mappedBy = "studentId", cascade = { CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.REFRESH })
+    private List<Training> trainingsAsStudent;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.REFRESH })
+    @JoinTable(name = "role_member", joinColumns = @JoinColumn(name = "member_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Collection<Role> roles;
 
     public Member() {
     }
@@ -242,6 +260,37 @@ public class Member {
 
     public void setWorkSchedules(List<WorkSchedule> workSchedules) {
         this.workSchedules = workSchedules;
+    }
+
+    public List<Training> getTrainingsAsTrainer() {
+        return trainingsAsTrainer;
+    }
+
+    public void setTrainingsAsTrainer(List<Training> trainingsAsTrainer) {
+        this.trainingsAsTrainer = trainingsAsTrainer;
+    }
+
+    public List<Training> getTrainingsAsStudent() {
+        return trainingsAsStudent;
+    }
+
+    public void setTrainingsAsStudent(List<Training> trainingsAsStudent) {
+        this.trainingsAsStudent = trainingsAsStudent;
+    }
+
+    public Collection<Role> getRoles() {
+        if (roles == null) {
+            roles = new ArrayList<Role>();
+        }
+        return roles;
+    }
+
+    public void setRoles(Collection<Role> roles) {
+        this.roles = roles;
+    }
+
+    public void addRole(Role role) {
+        getRoles().add(role);
     }
 
 }
