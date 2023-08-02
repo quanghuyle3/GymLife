@@ -1,5 +1,7 @@
 package com.dbmanagement.GymLife;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.boot.CommandLineRunner;
@@ -14,6 +16,8 @@ import com.dbmanagement.GymLife.entity.Equipment;
 import com.dbmanagement.GymLife.entity.Manufacture;
 import com.dbmanagement.GymLife.entity.Member;
 import com.dbmanagement.GymLife.entity.Membership;
+import com.dbmanagement.GymLife.entity.Role;
+import com.dbmanagement.GymLife.entity.Training;
 import com.dbmanagement.GymLife.entity.Transaction;
 import com.dbmanagement.GymLife.entity.WorkSchedule;
 
@@ -71,9 +75,16 @@ public class GymLifeApplication {
 			// createMember(appDAO);
 			// findMember(appDAO);
 			// updateMember(appDAO);
-			// deleteMember(appDAO);
+			deleteMember(appDAO);
 			// findAccessLogFromMember(appDAO);
 			// findWorkSchedulesFromMember(appDAO);
+			// findTrainingAsTrainerFromMember(appDAO);
+			// findTrainingAsStudentFromMember(appDAO);
+			// retrieveAMemberWithItsRoles(appDAO);
+			// createMemberWithExistingRole(appDAO);
+			// updateRoleForMember(appDAO);
+			// deleteRoleForMember(appDAO);
+			// deleteMemberWithItsRoles(appDAO);
 
 			// ACCESS LOG
 			// createAccessLog(appDAO);
@@ -87,8 +98,247 @@ public class GymLifeApplication {
 			// deleteWorkSchedule(appDAO);
 
 			// TRAINING
+			// createTraining(appDAO);
+			// findTraining(appDAO);
+			// retrieveAllTraining(appDAO);
+			// updateTraining(appDAO);
+			// deleteTraining(appDAO);
+
+			// ROLE
+			// createRole(appDAO);
+			// findRole(appDAO);
+			// retrieveAllRole(appDAO);
+			// updateRole(appDAO);
+			// retrieveARoleWithItsMembers(appDAO);
 
 		};
+	}
+
+	private void deleteMemberWithItsRoles(AppDAO appDAO) {
+		// retrieve
+		int id = 1000008;
+
+		// delete
+		appDAO.deleteMemberWithItsRoles(id);
+		appDAO.deleteMemberById(id);
+
+		System.out.println("Done.");
+	}
+
+	private void deleteRoleForMember(AppDAO appDAO) {
+		// retrieve member
+		int memberId = 1000008;
+		Member member = appDAO.retrieveAMemberWithItsRoles(memberId);
+
+		// find the role in db
+		int roleIdToDelete = 7;
+
+		// remove this role from the role list if that member has it
+		Role roleToDelete = null;
+		for (Role role : member.getRoles()) {
+			if (role.getId() == roleIdToDelete) {
+				roleToDelete = role;
+				break;
+			}
+		}
+
+		if (roleToDelete != null) {
+			member.getRoles().remove(roleToDelete);
+			// update to db
+			appDAO.update(member);
+			System.out.println("Successfully remove the role from this member");
+		} else {
+			System.out.println("This member doesn't have this role");
+		}
+
+	}
+
+	private void updateRoleForMember(AppDAO appDAO) {
+		// retrieve member
+		int memberId = 1000001;
+		Member member = appDAO.retrieveAMemberWithItsRoles(memberId);
+
+		// find the role in db
+		Role role = appDAO.findRoleById(6);
+
+		// add this role to member
+		member.addRole(role);
+
+		// update to db
+		appDAO.update(member);
+	}
+
+	private void createMemberWithExistingRole(AppDAO appDAO) {
+		// create bank account for this member first
+		String accountNumber = "12345678911234588";
+		String bankName = "Wells Fargo";
+		int routineNumber = 123456789;
+
+		BankAccount bankAccount = new BankAccount(accountNumber, bankName, routineNumber);
+
+		// create member
+		String email = "testemail5@gmail.com";
+		String userName = "testemail5";
+		String password = "{bcrypt}abcdef123";
+		String firstName = "Henry";
+		String lastName = "King";
+		String address = "3366Expresso Ct";
+		String phoneNumber = "2097654689-1234";
+		String dateOfBirth = "2000-12-16";
+		String gender = "Male";
+
+		String dateJoin = "2023-07-31";
+
+		Member member = new Member(email, userName, password, firstName, lastName, address, phoneNumber, dateOfBirth,
+				gender, dateJoin, bankAccount);
+
+		// set membership type (an optional attribute)
+		// (optional) (only required for gymmer, no need to manager, staff..)
+		Membership membership = appDAO.findMembershipById(6);
+		member.setMembershipType(membership);
+
+		// set role for it
+		Role role = appDAO.findRoleById(7);
+		member.addRole(role);
+
+		// save to db which will also save the bank account
+		appDAO.save(member);
+
+	}
+
+	private void retrieveAMemberWithItsRoles(AppDAO appDAO) {
+		int memberId = 1000001;
+
+		Member member = appDAO.retrieveAMemberWithItsRoles(memberId);
+
+		for (Role r : member.getRoles()) {
+			System.out.println(r);
+		}
+		System.out.println("Done.");
+	}
+
+	private void retrieveARoleWithItsMembers(AppDAO appDAO) {
+		int roleId = 1;
+
+		Role role = appDAO.retrieveARoleWithItsMembers(roleId);
+
+		for (Member m : role.getMembers()) {
+			System.out.println(m);
+		}
+		System.out.println("Done.");
+
+	}
+
+	private void updateRole(AppDAO appDAO) {
+		// retrieve
+		Role role = appDAO.findRoleById(6);
+
+		// modify
+		role.setWage(12);
+
+		// update
+		appDAO.update(role);
+	}
+
+	private void retrieveAllRole(AppDAO appDAO) {
+		List<Role> roles = appDAO.retrieveAllRole();
+		for (Role r : roles) {
+			System.out.println(r);
+		}
+		System.out.println("Done.");
+	}
+
+	private void findRole(AppDAO appDAO) {
+		Role role = appDAO.findRoleById(6);
+		System.out.println(role);
+		System.out.println("Done.");
+	}
+
+	private void createRole(AppDAO appDAO) {
+		Role role = new Role("Role 3");
+		role.setWage(20);
+		appDAO.save(role);
+		System.out.println("Done.");
+	}
+
+	private void findTrainingAsStudentFromMember(AppDAO appDAO) {
+		// retrieve the correct member
+		Member member = appDAO.findMemberById(1000004);
+
+		// retrieve all trainer which has this member as trainer
+		appDAO.retrieveTrainingAsStudentByMember(member);
+
+		// display
+		for (Training t : member.getTrainingsAsStudent()) {
+			System.out.println(t);
+		}
+		System.out.println("Done.");
+	}
+
+	private void findTrainingAsTrainerFromMember(AppDAO appDAO) {
+		// retrieve the correct member
+		Member member = appDAO.findMemberById(1000005);
+
+		// retrieve all trainer which has this member as trainer
+		appDAO.retrieveTrainingAsTrainerByMember(member);
+
+		// display
+		for (Training t : member.getTrainingsAsTrainer()) {
+			System.out.println(t);
+		}
+		System.out.println("Done.");
+	}
+
+	private void deleteTraining(AppDAO appDAO) {
+		int id = 3;
+		appDAO.deleteTrainingById(id);
+		System.out.println("Done.");
+	}
+
+	private void updateTraining(AppDAO appDAO) {
+		// retrieve
+		Training t = appDAO.findTrainingById(1);
+		Member trainer = appDAO.findMemberById(1000005);
+
+		// modify
+		t.setDateEnd("2023-07-31");
+		t.setTrainerId(trainer);
+
+		// update
+		appDAO.update(t);
+		System.out.println("Done.");
+	}
+
+	private void retrieveAllTraining(AppDAO appDAO) {
+		List<Training> result = appDAO.retrieveAllTraining();
+		for (Training t : result) {
+			System.out.println(t);
+		}
+		System.out.println("Done.");
+	}
+
+	private void findTraining(AppDAO appDAO) {
+		int id = 1;
+		Training training = appDAO.findTrainingById(id);
+		System.out.println(training);
+		System.out.println("Done.");
+	}
+
+	private void createTraining(AppDAO appDAO) {
+		// retrieve staff object
+		Member trainer = appDAO.findMemberById(1000004);
+
+		// retrieve student object
+		Member student = appDAO.findMemberById(1000005);
+
+		String dateStart = "2023-08-01";
+
+		// create
+		Training training = new Training(trainer, student, dateStart);
+
+		appDAO.save(training);
+		System.out.println("Done.");
+
 	}
 
 	private void findWorkSchedulesFromMember(AppDAO appDAO) {
@@ -234,7 +484,7 @@ public class GymLifeApplication {
 
 	private void deleteMember(AppDAO appDAO) {
 		// retrieve
-		int id = 1000003;
+		int id = 1000008;
 
 		// delete
 		appDAO.deleteMemberById(id);
