@@ -62,7 +62,7 @@ CREATE TABLE member (
         date_join DATE NOT NULL, 
         date_expiration DATE,
         active BOOLEAN DEFAULT TRUE,
-        bank_account_number VARCHAR(50) NOT NULL,
+        bank_account_number VARCHAR(50),
         CONSTRAINT membership_fk FOREIGN KEY (membership_type) REFERENCES membership(id),
         CONSTRAINT bank_account FOREIGN KEY (bank_account_number) REFERENCES bank_account(account_number)
         ) AUTO_INCREMENT = 1000000;
