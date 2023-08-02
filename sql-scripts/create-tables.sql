@@ -75,7 +75,7 @@ DROP TABLE IF EXISTS role;
 CREATE TABLE role (
 		id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(25) NOT NULL UNIQUE,
-        wage DOUBLE );
+        wage DOUBLE DEFAULT 0);
 -- INSERT INTO role (name, wage) VALUES ('employee', 18), ('owner', 45);
         
 DROP TABLE IF EXISTS role_member;
