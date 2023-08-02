@@ -72,10 +72,12 @@ public class GymLifeApplication {
 			// findMembersFromMembership(appDAO);
 
 			// MEMBER
-			// createMember(appDAO);
+			// createMember(appDAO); // already add setting role to this member to this
+			// method
 			// findMember(appDAO);
 			// updateMember(appDAO);
-			deleteMember(appDAO);
+			// deleteMember(appDAO); // already include delete roles from this member to
+			// this methoc
 			// findAccessLogFromMember(appDAO);
 			// findWorkSchedulesFromMember(appDAO);
 			// findTrainingAsTrainerFromMember(appDAO);
@@ -84,7 +86,8 @@ public class GymLifeApplication {
 			// createMemberWithExistingRole(appDAO);
 			// updateRoleForMember(appDAO);
 			// deleteRoleForMember(appDAO);
-			// deleteMemberWithItsRoles(appDAO);
+			// deleteTrainingWorkScheduleAccessLogOfAMember(appDAO); // already integrated
+			// to deleteMember() method
 
 			// ACCESS LOG
 			// createAccessLog(appDAO);
@@ -114,15 +117,9 @@ public class GymLifeApplication {
 		};
 	}
 
-	private void deleteMemberWithItsRoles(AppDAO appDAO) {
-		// retrieve
-		int id = 1000008;
-
-		// delete
-		appDAO.deleteMemberWithItsRoles(id);
-		appDAO.deleteMemberById(id);
-
-		System.out.println("Done.");
+	private void deleteTrainingWorkScheduleAccessLogOfAMember(AppDAO appDAO) {
+		int memberId = 1000005;
+		appDAO.deleteTrainingWorkScheduleAccessLogOfAMember(memberId);
 	}
 
 	private void deleteRoleForMember(AppDAO appDAO) {
@@ -190,7 +187,7 @@ public class GymLifeApplication {
 		String dateJoin = "2023-07-31";
 
 		Member member = new Member(email, userName, password, firstName, lastName, address, phoneNumber, dateOfBirth,
-				gender, dateJoin, bankAccount);
+				gender, dateJoin);
 
 		// set membership type (an optional attribute)
 		// (optional) (only required for gymmer, no need to manager, staff..)
@@ -326,10 +323,10 @@ public class GymLifeApplication {
 
 	private void createTraining(AppDAO appDAO) {
 		// retrieve staff object
-		Member trainer = appDAO.findMemberById(1000004);
+		Member trainer = appDAO.findMemberById(1000005);
 
 		// retrieve student object
-		Member student = appDAO.findMemberById(1000005);
+		Member student = appDAO.findMemberById(1000017);
 
 		String dateStart = "2023-08-01";
 
@@ -386,10 +383,10 @@ public class GymLifeApplication {
 	private void createWorkSchedule(AppDAO appDAO) {
 		String workDate = "2023-07-28";
 
-		Member member = appDAO.findMemberById(1000005);
+		Member member = appDAO.findMemberById(1000017);
 
 		String timeStart = "15:00";
-		String timeEnd = "19:00";
+		String timeEnd = "20:00";
 
 		WorkSchedule workSchedule = new WorkSchedule(workDate, member, timeStart, timeEnd);
 		appDAO.save(workSchedule);
@@ -433,9 +430,9 @@ public class GymLifeApplication {
 		String date = "2023-07-31";
 
 		// find the member
-		Member member = appDAO.findMemberById(1000001);
+		Member member = appDAO.findMemberById(1000017);
 
-		String timeAccessIn = "20:30";
+		String timeAccessIn = "21:40";
 
 		AccessLog accessLog = new AccessLog(date, member, timeAccessIn);
 		appDAO.save(accessLog);
@@ -484,9 +481,39 @@ public class GymLifeApplication {
 
 	private void deleteMember(AppDAO appDAO) {
 		// retrieve
-		int id = 1000008;
+		int id = 1000017;
 
-		// delete
+		// set the associate bank account to null
+		// update to database
+		// and then delete it from database
+		// Member member = appDAO.findMemberById(id);
+		Member member = appDAO.retrieveAMemberWithItsRoles(id);
+		// BankAccount bankAccount = member.getBankAccountNumber();
+		member.setBankAccountNumber(null);
+		appDAO.update(member);
+
+		// NO NEED!
+		// set the associate membership to null before delete
+		// member.setMembershipType(null);
+
+		// Remove the association that Member has on its Role
+		for (Role role : member.getRoles()) {
+			appDAO.retrieveARoleWithItsMembers(role.getId()).getMembers().remove(member);
+
+			// appDAO.update(role);
+		}
+
+		// remove all roles from this member
+		// member.setRoles(null);
+		member.getRoles().clear();
+
+		// remove all access log, training (if any), and work schedule (if any)
+		// associate to this member
+		// to avoid constraint in SQL table
+		appDAO.deleteTrainingWorkScheduleAccessLogOfAMember(id);
+
+		// delete this member
+		// appDAO.deleteMemberWithItsRoles(id);
 		appDAO.deleteMemberById(id);
 
 		System.out.println("Done.");
@@ -522,15 +549,15 @@ public class GymLifeApplication {
 	private void createMember(AppDAO appDAO) {
 
 		// create bank account for this member first
-		String accountNumber = "12345678911234583";
+		String accountNumber = "12345678911234520";
 		String bankName = "Wells Fargo";
 		int routineNumber = 123456789;
 
 		BankAccount bankAccount = new BankAccount(accountNumber, bankName, routineNumber);
 
 		// create member
-		String email = "testemail4@gmail.com";
-		String userName = "testemail4";
+		String email = "beta20@gmail.com";
+		String userName = "beta20";
 		String password = "{bcrypt}abcdef123";
 		String firstName = "Karen";
 		String lastName = "West";
@@ -542,11 +569,19 @@ public class GymLifeApplication {
 		String dateJoin = "2023-07-31";
 
 		Member member = new Member(email, userName, password, firstName, lastName, address, phoneNumber, dateOfBirth,
-				gender, dateJoin, bankAccount);
+				gender, dateJoin);
 
-		// set membership type (an optional attribute)
+		// set role for it
+		Role role = appDAO.findRoleById(7);
+		member.addRole(role);
+		role = appDAO.findRoleById(8);
+		member.addRole(role);
+
+		// set bank account (Optional) (but required most of time for any member)
+		member.setBankAccountNumber(bankAccount);
+		// set membership type (Optional)
 		// (optional) (only required for gymmer, no need to manager, staff..)
-		Membership membership = appDAO.findMembershipById(6);
+		Membership membership = appDAO.findMembershipById(7);
 		member.setMembershipType(membership);
 
 		// save to db which will also save the bank account
@@ -769,7 +804,7 @@ public class GymLifeApplication {
 	}
 
 	private void createManufactureWithBankAccount(AppDAO appDAO) {
-		String name = "Encore Manufacture";
+		String name = "Manu 111";
 		String address = "8th Street, San Jose, CA, 95112";
 
 		// create manufacture
@@ -780,7 +815,7 @@ public class GymLifeApplication {
 		manufacture.setPhoneNumber(thisPhoneNumber);
 
 		// create a bank account for it
-		String accountNumber = "12345678911234569";
+		String accountNumber = "12345678911234590";
 		String bankName = "Bank Of America";
 		int routineNumber = 123456789;
 		BankAccount bankAccount = new BankAccount(accountNumber, bankName, routineNumber);
@@ -797,7 +832,7 @@ public class GymLifeApplication {
 	}
 
 	private void deleteBankAccount(AppDAO appDAO) {
-		String theAccountNumber = "12345678911234570";
+		String theAccountNumber = "12345678911234513";
 		// find the bank account instance
 		BankAccount bankAccount = appDAO.findBankAccountByAccountNumber(theAccountNumber);
 
@@ -812,8 +847,12 @@ public class GymLifeApplication {
 		}
 		// if no manufacture, then FIND MEMBER
 		else {
-			// set its bankaccount to null
-			// System.out.println("Null");
+			Member member = bankAccount.getMember();
+			if (member != null) {
+				// set its bankaccount to null
+				member.setBankAccountNumber(null);
+				appDAO.update(member);
+			}
 		}
 
 		System.out.println("Deleting bank account: " + theAccountNumber);
