@@ -89,7 +89,7 @@ public class Member {
             CascadeType.REFRESH })
     private List<Training> trainingsAsStudent;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE,
+    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE,
             CascadeType.REFRESH })
     @JoinTable(name = "role_member", joinColumns = @JoinColumn(name = "member_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role> roles;
