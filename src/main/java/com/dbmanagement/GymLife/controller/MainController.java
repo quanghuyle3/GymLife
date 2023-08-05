@@ -10,4 +10,9 @@ public class MainController {
     public String index() {
         return "index";
     }
+
+    @GetMapping("member")
+    public String showMember() {
+        return "member";
+    }
 }
