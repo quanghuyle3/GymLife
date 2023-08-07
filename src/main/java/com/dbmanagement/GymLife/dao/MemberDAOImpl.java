@@ -1,5 +1,7 @@
 package com.dbmanagement.GymLife.dao;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -30,6 +32,20 @@ public class MemberDAOImpl implements MemberDAO {
             member = null;
         }
         return member;
+    }
+
+    @Override
+    public List<Member> retrieveAllMembers() {
+        TypedQuery<Member> query = entityManager.createQuery("from Member", Member.class);
+
+        List<Member> result = null;
+
+        try {
+            result = query.getResultList();
+        } catch (Exception e) {
+            result = null;
+        }
+        return result;
     }
 
 }
