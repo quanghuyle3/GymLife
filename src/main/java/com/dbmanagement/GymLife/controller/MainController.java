@@ -11,8 +11,8 @@ public class MainController {
         return "index";
     }
 
-    @GetMapping("member")
-    public String showMember() {
-        return "member";
-    }
+    // @GetMapping("member")
+    // public String showMember() {
+    // return "member";
+    // }
 }
