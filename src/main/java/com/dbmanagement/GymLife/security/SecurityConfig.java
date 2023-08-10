@@ -62,16 +62,21 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.authorizeHttpRequests(configurer -> configurer
-                .requestMatchers("/").hasAnyRole("MANAGER", "OWNER")
+                // .requestMatchers("/").hasAnyRole("MANAGER", "OWNER", "EMPLOYEE", "TRAINER",
+                // "GYMMER")
+                .requestMatchers("/").permitAll()
                 .requestMatchers("member").permitAll()
-                .anyRequest().authenticated())
+                // .anyRequest().authenticated())
+                .anyRequest().permitAll())
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/authenticateTheUser")
                         .failureHandler(null)
                         .permitAll())
-                .logout(logout -> logout.permitAll());
-        // .exceptionHandling(null);
+                .logout(logout -> logout.permitAll().logoutSuccessHandler(new CustomLogoutSuccessHandler()))
+                .exceptionHandling(configurer -> configurer.accessDeniedPage("/access-denied"));
+        // .exceptionHandling((exceptionHandling) -> exceptionHandling
+        // .accessDeniedPage("/access-denied"));
 
         http.httpBasic(Customizer.withDefaults());
 
