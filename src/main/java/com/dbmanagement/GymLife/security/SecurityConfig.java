@@ -65,7 +65,7 @@ public class SecurityConfig {
                 // .requestMatchers("/").hasAnyRole("MANAGER", "OWNER", "EMPLOYEE", "TRAINER",
                 // "GYMMER")
                 .requestMatchers("/").permitAll()
-                .requestMatchers("member").permitAll()
+                .requestMatchers("/members/**").hasAnyRole("OWNER", "MANAGER", "TRAINER", "EMPLOYEE")
                 // .anyRequest().authenticated())
                 .anyRequest().permitAll())
                 .formLogin(form -> form
