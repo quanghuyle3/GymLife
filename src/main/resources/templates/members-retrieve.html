@@ -8,7 +8,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GYMLIFE - Home page</title>
+    <title>Gymlife</title>
 
     <link rel="shortcut icon" href="/images/logo/tiny_g.png" type="image/png" />
 
@@ -69,7 +69,7 @@
 
           <div sec:authorize="!isAuthenticated()" class="text-end">
             <a
-              href="/register/memberForm"
+              href="/register"
               class="btn btn-outline-light custom-bg-tertiary me-2"
               >JOIN NOW</a
             >
@@ -313,30 +313,123 @@
           <div
             class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
           >
-            <h1 class="h2">HOME PAGE</h1>
+            <h1 class="h2">Members</h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+              <div class="btn-group me-2">
+                <button
+                  type="button"
+                  class="btn btn-lg btn-outline-primary"
+                  onclick="window.location.href='/register/memberForm';"
+                >
+                  Add member
+                </button>
+              </div>
+            </div>
           </div>
-          <div
-            sec:authorize="isAuthenticated()"
-            class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary"
-          >
-            <p>
-              User: <span sec:authentication="principal.username"></span>
-              <br /><br />
-              Role(s):
-              <span sec:authentication="principal.authorities"></span>
-              <br /><br />
-              First name:
-              <span sec:authentication="principal.firstName"></span>
-              <br /><br />
-              Last name:
-              <span sec:authentication="principal.lastName"></span>
-              <br /><br />
-              Id:
-              <span sec:authentication="principal.id"></span>
-              <br /><br />
-              Email:
-              <span sec:authentication="principal.email"></span>
-            </p>
+
+          <!-- Place for messages: successful registration, error, alert etc ... -->
+          <div class="form-group">
+            <div class="col-xs-15">
+              <div>
+                <!-- Check for successful registration message -->
+                <div th:if="${successfulRegistration}">
+                  <div class="alert alert-success col-xs-offset-1 col-xs-10">
+                    <span th:text="${successfulRegistration}"></span>
+                  </div>
+                </div>
+
+                <!-- Check for successful update message -->
+                <div th:if="${successfulUpdate}">
+                  <div class="alert alert-warning col-xs-offset-1 col-xs-10">
+                    <span th:text="${successfulUpdate}"></span>
+                  </div>
+                </div>
+
+                <!-- Check for successful delete message -->
+                <div th:if="${successfulDelete}">
+                  <div class="alert alert-danger col-xs-offset-1 col-xs-10">
+                    <span th:text="${successfulDelete}"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-responsive small">
+            <!-- list items for table  -->
+            <!-- <table class="table table-hover table-striped table-bordered table-header"> -->
+            <table class="table table-striped table-sm">
+              <thead>
+                <tr>
+                  <th scope="col" class="table-header">#</th>
+                  <th scope="col" class="table-header">Status</th>
+                  <th scope="col" class="table-header">Member ID</th>
+                  <th scope="col" class="table-header">First name</th>
+                  <th scope="col" class="table-header">Last name</th>
+                  <th scope="col" class="table-header">Birthdate</th>
+                  <th scope="col" class="table-header">Gender</th>
+                  <th scope="col" class="table-header">Address</th>
+                  <th scope="col" class="table-header">Email</th>
+                  <th scope="col" class="table-header">Phone</th>
+                  <th scope="col" class="table-header">Membership Type</th>
+                  <th scope="col" class="table-header">Member Since</th>
+                  <th scope="col" class="table-header">Date Cancel</th>
+                  <th scope="col" class="table-header">Bank Account Ending</th>
+                  <th scope="col" class="table-header">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="member, memberInfo : ${members}">
+                  <th scope="row" th:text="${memberInfo.count}"></th>
+                  <td
+                    th:text="${member.active} ? 'ACTIVE' : 'CANCELLED'"
+                    th:classappend="${member.active} ? 'text-success' : 'text-danger'"
+                  ></td>
+                  <td th:text="${member.id}" class="table-data"></td>
+                  <td th:text="${member.firstName}"></td>
+                  <td th:text="${member.lastName}"></td>
+                  <td
+                    th:text="${#strings.substring(member.dateOfBirth, 5, 7) + '/' + #strings.substring(member.dateOfBirth, 8, 10) + '/' + #strings.substring(member.dateOfBirth, 0, 4)}"
+                  ></td>
+                  <td th:text="${member.gender}"></td>
+                  <td th:text="${member.address}"></td>
+                  <td th:text="${member.email}"></td>
+                  <td th:text="${member.phoneNumber}"></td>
+                  <td
+                    th:text="${member.membershipType} ? ${member.membershipType.typeName} : ${member.membershipType}"
+                  ></td>
+                  <td
+                    th:text="${#strings.substring(member.dateJoin, 5, 7) + '/' + #strings.substring(member.dateJoin, 8, 10) + '/' + #strings.substring(member.dateJoin, 0, 4)}"
+                  ></td>
+                  <td
+                    th:text="${member.dateExpiration} ? ${#strings.substring(member.dateExpiration, 5, 7) + '/' + #strings.substring(member.dateExpiration, 8, 10) + '/' + #strings.substring(member.dateExpiration, 0, 4)} : ${member.dateExpiration}"
+                  ></td>
+                  <td
+                    th:text="${member.bankAccountNumber} ? ${'x' + #strings.substring(member.bankAccountNumber.accountNumber, #strings.length(member.bankAccountNumber.accountNumber) -4)} : ${member.bankAccountNumber}"
+                  ></td>
+                  <!-- <td>Update/Delete buttons</td> -->
+                  <td>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                      <div class="btn-group me-2">
+                        <a
+                          href=""
+                          th:href="@{/members/update(memberId=${member.id})}"
+                          class="btn btn-sm btn-outline-success"
+                          >Update</a
+                        >
+                        <a
+                          href=""
+                          th:href="@{/members/delete(memberId=${member.id})}"
+                          class="btn btn-sm btn-outline-danger"
+                          onclick="return confirm('Are you sure you want to delete this member? (This will lead to data related to this member being erased from the database)')"
+                          >Delete</a
+                        >
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </main>
       </div>

@@ -8,7 +8,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GYMLIFE - Home page</title>
+    <title>Gymlife</title>
 
     <link rel="shortcut icon" href="/images/logo/tiny_g.png" type="image/png" />
 
@@ -69,7 +69,7 @@
 
           <div sec:authorize="!isAuthenticated()" class="text-end">
             <a
-              href="/register/memberForm"
+              href="/register"
               class="btn btn-outline-light custom-bg-tertiary me-2"
               >JOIN NOW</a
             >
@@ -313,30 +313,17 @@
           <div
             class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
           >
-            <h1 class="h2">HOME PAGE</h1>
+            <h1 class="h2">Confirmation</h1>
           </div>
-          <div
-            sec:authorize="isAuthenticated()"
-            class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary"
-          >
-            <p>
-              User: <span sec:authentication="principal.username"></span>
-              <br /><br />
-              Role(s):
-              <span sec:authentication="principal.authorities"></span>
-              <br /><br />
-              First name:
-              <span sec:authentication="principal.firstName"></span>
-              <br /><br />
-              Last name:
-              <span sec:authentication="principal.lastName"></span>
-              <br /><br />
-              Id:
-              <span sec:authentication="principal.id"></span>
-              <br /><br />
-              Email:
-              <span sec:authentication="principal.email"></span>
-            </p>
+          <div th:if="${webMember}">
+            <h5>Successfully registered a new staff</h5>
+            <ul>
+              <li th:text="'First name: ' + ${webMember.firstName}"></li>
+              <li th:text="'Last name: ' + ${webMember.lastName}"></li>
+              <li th:text="'Email name: ' + ${webMember.email}"></li>
+              <li th:text="'User name: ' + ${webMember.userName}"></li>
+              <li th:text="'Role(s): ' + ${webMember.role}"></li>
+            </ul>
           </div>
         </main>
       </div>

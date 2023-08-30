@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gymlife</title>
+
+    <link rel="shortcut icon" href="/images/logo/tiny_g.png" type="image/png" />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
+      crossorigin="anonymous"
+    />
+
+    <link rel="stylesheet" href="/css/MoreStyles.css" />
+  </head>
+
+  <body>
+    <!-- <div class="container-fluid"> -->
+    <!-- HEADER  -->
+    <header class="contianer-fluid p-3 sticky-top main-header">
+      <div class="container">
+        <div
+          class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start"
+        >
+          <a href="/" class="d-flex align-items-center mb-2 mb-lg-0">
+            <img
+              class="main-logo"
+              src="/images/logo/small_logo.png"
+              alt="LOGO"
+            />
+          </a>
+
+          <ul
+            class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0"
+          >
+            <li>
+              <a href="/" class="nav-link px-2 text-white">HOME</a>
+            </li>
+            <li>
+              <a href="/membership" class="nav-link px-2 text-white"
+                >MEMBERSHIP</a
+              >
+            </li>
+            <li>
+              <a href="/contact" class="nav-link px-2 text-white">CONTACT</a>
+            </li>
+          </ul>
+
+          <form
+            action="/search"
+            class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3"
+            role="search"
+          >
+            <input
+              type="search"
+              class="form-control form-control-dark"
+              placeholder="Search..."
+              aria-label="Search"
+            />
+          </form>
+
+          <div sec:authorize="!isAuthenticated()" class="text-end">
+            <a
+              href="/register"
+              class="btn btn-outline-light custom-bg-tertiary me-2"
+              >JOIN NOW</a
+            >
+            <a href="/login" class="btn btn-outline-light">LOGIN</a>
+          </div>
+
+          <div sec:authorize="isAuthenticated()" class="dropdown text-end">
+            <button
+              class="btn btn-link dropdown-toggle dropdown-avatar"
+              type="button"
+              id="dropdownMenuButton"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <img
+                src="/images/avatar/default-ava.png"
+                alt="Ava"
+                width="40px"
+                height="40px"
+                class="rounded-circle"
+              />
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <li>
+                <a class="dropdown-item" href="" th:href="@{/my-profile/view}"
+                  >Profile</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item" href="" th:href="@{/my-profile/update}"
+                  >Update</a
+                >
+              </li>
+              <li><hr class="dropdown-divider" /></li>
+              <li>
+                <form action="#" th:action="@{/logout}" method="post">
+                  <button type="submit" class="dropdown-item">Log out</button>
+                </form>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN SECTION  -->
+    <div class="container-fluid">
+      <div class="row d-flex">
+        <!-- SIDEBAR  -->
+        <div
+          sec:authorize="isAuthenticated() and !hasRole('GYMMER')"
+          class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary"
+        >
+          <div
+            class="offcanvas-md offcanvas-end bg-body-tertiary"
+            tabindex="-1"
+            id="sidebarMenu"
+            aria-labelledby="sidebarMenuLabel"
+          >
+            <div
+              class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto"
+            >
+              <ul class="nav flex-column">
+                <li class="nav-item">
+                  <a
+                    class="nav-link d-flex align-items-center gap-2 active"
+                    aria-current="page"
+                    href=""
+                    th:href="@{/my-profile/view}"
+                  >
+                    <img
+                      class="bi"
+                      src="/images/avatar/default-ava.png"
+                      alt="DefaultAvatar" />
+                    <span
+                      th:text="${#authentication.principal.firstName + ' ' + #authentication.principal.lastName}"
+                    ></span
+                  ></a>
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link d-flex align-items-center gap-2 active"
+                    aria-current="page"
+                    href="/dashboard"
+                  >
+                    <img
+                      class="bi"
+                      src="/images/icon/dashboard-icon.png"
+                      alt="DashboardIcon"
+                    />
+                    Dashboard</a
+                  >
+                </li>
+              </ul>
+
+              <h6
+                class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-body-secondary text-uppercase"
+              >
+                Management
+              </h6>
+
+              <ul class="nav flex-column mb-auto">
+                <li class="nav-item">
+                  <a
+                    class="nav-link d-flex align-items-center gap-2 active"
+                    aria-current="page"
+                    href="/members/retrieve"
+                  >
+                    <img
+                      class="bi"
+                      src="/images/icon/doc-icon.png"
+                      alt="DocIcon"
+                    />
+                    Members</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link d-flex align-items-center gap-2 active"
+                    aria-current="page"
+                    href="/staffs/retrieve"
+                  >
+                    <img
+                      class="bi"
+                      src="/images/icon/doc-icon.png"
+                      alt="DocIcon"
+                    />
+                    Staffs</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link d-flex align-items-center gap-2 active"
+                    aria-current="page"
+                    href="/work-schedule/retrieve"
+                  >
+                    <img
+                      class="bi"
+                      src="/images/icon/doc-icon.png"
+                      alt="DocIcon"
+                    />
+                    Work Schedule</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link d-flex align-items-center gap-2 active"
+                    aria-current="page"
+                    href="/trainings/retrieve"
+                  >
+                    <img
+                      class="bi"
+                      src="/images/icon/doc-icon.png"
+                      alt="DocIcon"
+                    />
+                    Trainings</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link d-flex align-items-center gap-2 active"
+                    aria-current="page"
+                    href="/memberships/retrieve"
+                  >
+                    <img
+                      class="bi"
+                      src="/images/icon/doc-icon.png"
+                      alt="DocIcon"
+                    />
+                    Memberships</a
+                  >
+                </li>
+              </ul>
+
+              <hr class="my-3" />
+
+              <ul class="nav flex-column mb-auto">
+                <li class="nav-item">
+                  <a
+                    class="nav-link d-flex align-items-center gap-2 active"
+                    aria-current="page"
+                    href="/access-log/retrieve"
+                  >
+                    <img
+                      class="bi"
+                      src="/images/icon/doc-icon.png"
+                      alt="DocIcon"
+                    />
+                    Access Log</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link d-flex align-items-center gap-2 active"
+                    aria-current="page"
+                    href="/manufactures/retrieve"
+                  >
+                    <img
+                      class="bi"
+                      src="/images/icon/doc-icon.png"
+                      alt="DocIcon"
+                    />
+                    Manufactures</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link d-flex align-items-center gap-2 active"
+                    aria-current="page"
+                    href="/equipment/retrieve"
+                  >
+                    <img
+                      class="bi"
+                      src="/images/icon/doc-icon.png"
+                      alt="DocIcon"
+                    />
+                    Equipment</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link d-flex align-items-center gap-2 active"
+                    aria-current="page"
+                    href="/transactions/retrieve"
+                  >
+                    <img
+                      class="bi"
+                      src="/images/icon/doc-icon.png"
+                      alt="DocIcon"
+                    />
+                    Transactions</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- NEXT TO SIDEBAR (MAIN IN MAIN) -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 flex-grow-1">
+          <div
+            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+          >
+            <h1 class="h2" th:text="'Staff ID: ' + ${webMember.id} "></h1>
+          </div>
+          <form
+            action="#"
+            th:action="@{/my-profile-staff/update/process}"
+            th:object="${webMember}"
+            method="POST"
+            class="form-horizontal row g-3"
+          >
+            <!-- Place for messages: error, alert etc ... -->
+            <div class="form-group">
+              <div class="col-xs-15">
+                <div>
+                  <!-- Check for registration error -->
+
+                  <div th:if="${registrationError}">
+                    <div class="alert alert-danger col-xs-offset-1 col-xs-10">
+                      <span th:text="${registrationError}"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <label for="inputEmail4" class="form-label">Email</label>
+              <input
+                id="inputEmail4"
+                type="email"
+                th:field="*{email}"
+                class="form-control"
+              />
+              <div
+                th:if="${#fields.hasErrors('email')}"
+                style="margin-bottom: 25px"
+                class="text-danger"
+              >
+                <ul>
+                  <li
+                    th:each="err : ${#fields.errors('email')}"
+                    th:text="${err}"
+                  />
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label for="inputUsername4" class="form-label">Username</label>
+              <input
+                id="inputUsername4"
+                type="text"
+                th:field="*{userName}"
+                class="form-control"
+                readonly
+              />
+              <div
+                th:if="${#fields.hasErrors('userName')}"
+                style="margin-bottom: 25px"
+                class="text-danger"
+              >
+                <ul>
+                  <li
+                    th:each="err : ${#fields.errors('userName')}"
+                    th:text="${err}"
+                  />
+                </ul>
+              </div>
+            </div>
+
+            <!-- Preset id and role strings list  -->
+            <!-- to avoid validation error for these two fields  -->
+            <input
+              style="display: none"
+              type="text"
+              th:field="*{id}"
+              th:value="${webMember.id}"
+              class="form-control"
+            />
+            <input
+              style="display: none"
+              type="text"
+              th:field="*{preRoleStrings}"
+              th:value="${webMember.preRoleStrings}"
+              class="form-control"
+            />
+
+            <!-- Set this password field display to none so it wont appear and user can't change  -->
+            <!-- this step will prevent validation error for password field  -->
+            <div class="col-md-4" style="display: none">
+              <label for="inputPassword4" class="form-label"
+                >Confirm your password</label
+              >
+              <input
+                id="inputPassword4"
+                type="text"
+                th:field="*{password}"
+                th:value="${webMember.password}"
+                class="form-control"
+              />
+              <div
+                th:if="${#fields.hasErrors('password')}"
+                style="margin-bottom: 25px"
+                class="text-danger"
+              >
+                <ul>
+                  <li
+                    th:each="err : ${#fields.errors('password')}"
+                    th:text="${err}"
+                  />
+                </ul>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-md-4 px-2">
+                <label for="inputFirstname4" class="form-label"
+                  >First name</label
+                >
+                <input
+                  id="inputFirstname4"
+                  type="text"
+                  th:field="*{firstName}"
+                  class="form-control"
+                />
+                <div
+                  th:if="${#fields.hasErrors('firstName')}"
+                  style="margin-bottom: 25px"
+                  class="text-danger"
+                >
+                  <ul>
+                    <li
+                      th:each="err : ${#fields.errors('firstName')}"
+                      th:text="${err}"
+                    />
+                  </ul>
+                </div>
+              </div>
+              <div class="col-md-4 px-3">
+                <label for="inputLastname4" class="form-label">Last name</label>
+                <input
+                  id="inputLastname4"
+                  type="text"
+                  th:field="*{lastName}"
+                  class="form-control"
+                />
+                <div
+                  th:if="${#fields.hasErrors('lastName')}"
+                  style="margin-bottom: 25px"
+                  class="text-danger"
+                >
+                  <ul>
+                    <li
+                      th:each="err : ${#fields.errors('lastName')}"
+                      th:text="${err}"
+                    />
+                  </ul>
+                </div>
+              </div>
+              <div class="col-md-4 px-4">
+                <label for="inputGender4" class="form-label">Gender</label>
+                <select
+                  th:field="*{gender}"
+                  id="inputGender4"
+                  class="form-select"
+                >
+                  <option th:value="Male">Male</option>
+                  <option th:value="Female">Female</option>
+                  <option th:value="Other">Other</option>
+                </select>
+                <div
+                  th:if="${#fields.hasErrors('gender')}"
+                  style="margin-bottom: 25px"
+                  class="text-danger"
+                >
+                  <ul>
+                    <li
+                      th:each="err : ${#fields.errors('gender')}"
+                      th:text="${err}"
+                    />
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <label for="inputAddress" class="form-label">Address</label>
+              <input
+                type="text"
+                id="inputAddress"
+                placeholder="1234 Main St, San Jose, CA 95112"
+                th:field="*{address}"
+                class="form-control"
+              />
+              <div
+                th:if="${#fields.hasErrors('address')}"
+                style="margin-bottom: 25px"
+                class="text-danger"
+              >
+                <ul>
+                  <li
+                    th:each="err : ${#fields.errors('address')}"
+                    th:text="${err}"
+                  />
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label for="inputPhonenumber4" class="form-label"
+                >Phone number</label
+              >
+              <input
+                id="inputPhonenumber4"
+                type="tel"
+                pattern="[0-9]{10}(|-[0-9]{4})"
+                th:field="*{phoneNumber}"
+                placeholder="XXXXXXXXXX or XXXXXXXXXX-XXXX"
+                class="form-control"
+              />
+              <div
+                th:if="${#fields.hasErrors('phoneNumber')}"
+                style="margin-bottom: 25px"
+                class="text-danger"
+              >
+                <ul>
+                  <li
+                    th:each="err : ${#fields.errors('phoneNumber')}"
+                    th:text="${err}"
+                  />
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label for="inputDOB4" class="form-label">Date of birth</label>
+              <input
+                id="inputDOB4"
+                type="date"
+                th:field="*{dateOfBirth}"
+                class="form-control text-muted"
+                readonly
+              />
+              <div
+                th:if="${#fields.hasErrors('dateOfBirth')}"
+                style="margin-bottom: 25px"
+                class="text-danger"
+              >
+                <ul>
+                  <li
+                    th:each="err : ${#fields.errors('dateOfBirth')}"
+                    th:text="${err}"
+                  />
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label for="inputRole4" class="form-label">Role</label>
+              <input
+                id="inputRole4"
+                th:field="*{role}"
+                class="form-control"
+                readonly
+              />
+              <!-- <div
+                th:if="${#fields.hasErrors('membershipType')}"
+                style="margin-bottom: 25px"
+                class="text-danger"
+              >
+                <ul>
+                  <li
+                    th:each="err : ${#fields.errors('membershipType')}"
+                    th:text="${err}"
+                  />
+                </ul>
+              </div> -->
+            </div>
+            <div class="col-md-3">
+              <label for="inputDatejoin4" class="form-label">Date Join</label>
+              <input
+                id="inputDatejoin4"
+                type="date"
+                th:field="*{dateJoin}"
+                class="form-control text-muted"
+                readonly
+              />
+              <div
+                th:if="${#fields.hasErrors('dateJoin')}"
+                style="margin-bottom: 25px"
+                class="text-danger"
+              >
+                <ul>
+                  <li
+                    th:each="err : ${#fields.errors('dateJoin')}"
+                    th:text="${err}"
+                  />
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label for="inputBankname4" class="form-label">Bank Name</label>
+              <input
+                id="inputBankname4"
+                type="text"
+                th:field="*{bankName}"
+                class="form-control"
+              />
+              <div
+                th:if="${#fields.hasErrors('bankName')}"
+                style="margin-bottom: 25px"
+                class="text-danger"
+              >
+                <ul>
+                  <li
+                    th:each="err : ${#fields.errors('bankName')}"
+                    th:text="${err}"
+                  />
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label for="inputBankaccountnumber4" class="form-label"
+                >Bank Account Number</label
+              >
+              <input
+                id="inputBankaccountnumber4"
+                type="number"
+                th:field="*{bankAccountNumber}"
+                class="form-control"
+              />
+
+              <div
+                th:if="${#fields.hasErrors('bankAccountNumber')}"
+                style="margin-bottom: 25px"
+                class="text-danger"
+              >
+                <ul>
+                  <li
+                    th:each="err : ${#fields.errors('bankAccountNumber')}"
+                    th:text="${err}"
+                  />
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label for="inputRoutinenumber4" class="form-label"
+                >Routine Number</label
+              >
+              <input
+                id="inputRoutinenumber4"
+                type="number"
+                min="100000000"
+                max="999999999"
+                th:field="*{routineNumber}"
+                class="form-control"
+              />
+
+              <div
+                th:if="${#fields.hasErrors('routineNumber')}"
+                style="margin-bottom: 25px"
+                class="text-danger"
+              >
+                <ul>
+                  <li
+                    th:each="err : ${#fields.errors('routineNumber')}"
+                    th:text="${err}"
+                  />
+                </ul>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="gridCheck"
+                />
+                <label class="form-check-label" for="gridCheck">
+                  I am sure that all updated information is correct.
+                </label>
+              </div>
+            </div>
+            <div class="col-12">
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+            <div class="col-12">
+              <a href="">Change password</a>
+            </div>
+          </form>
+        </main>
+      </div>
+    </div>
+    <!-- </div> -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

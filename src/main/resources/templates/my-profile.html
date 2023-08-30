@@ -8,7 +8,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GYMLIFE - Home page</title>
+    <title>Gymlife</title>
 
     <link rel="shortcut icon" href="/images/logo/tiny_g.png" type="image/png" />
 
@@ -69,7 +69,7 @@
 
           <div sec:authorize="!isAuthenticated()" class="text-end">
             <a
-              href="/register/memberForm"
+              href="/register"
               class="btn btn-outline-light custom-bg-tertiary me-2"
               >JOIN NOW</a
             >
@@ -310,33 +310,154 @@
 
         <!-- NEXT TO SIDEBAR (MAIN IN MAIN) -->
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 flex-grow-1">
-          <div
-            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
-          >
-            <h1 class="h2">HOME PAGE</h1>
-          </div>
-          <div
-            sec:authorize="isAuthenticated()"
-            class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary"
-          >
-            <p>
-              User: <span sec:authentication="principal.username"></span>
-              <br /><br />
-              Role(s):
-              <span sec:authentication="principal.authorities"></span>
-              <br /><br />
-              First name:
-              <span sec:authentication="principal.firstName"></span>
-              <br /><br />
-              Last name:
-              <span sec:authentication="principal.lastName"></span>
-              <br /><br />
-              Id:
-              <span sec:authentication="principal.id"></span>
-              <br /><br />
-              Email:
-              <span sec:authentication="principal.email"></span>
-            </p>
+          <!-- DISPLAY MY PROFILE  -->
+          <div class="container py-5 h-100">
+            <!-- General info of profile -->
+            <div class="row d-flex justify-content-center">
+              <div
+                class="col col-md-3 col-lg-2 text-center"
+                style="
+                  border-radius: 10px;
+                  border: black 1px solid;
+                  background-color: #ef4565;
+                "
+              >
+                <img
+                  src="/images/avatar/default-ava.png"
+                  alt="My Avatar"
+                  class="img-fluid mt-2"
+                  style="
+                    background-color: white;
+                    width: 180px;
+                    border-radius: 10px;
+                  "
+                />
+                <div class="my-2">
+                  <h2
+                    th:text="${member.firstName} + ' ' + ${member.lastName}"
+                  ></h2>
+                  <div th:text="${member.id}"></div>
+                  <div th:text="${member.email}"></div>
+                  <div></div>
+                </div>
+              </div>
+
+              <div
+                class="col col-md-6 col-lg-4 ms-4"
+                style="
+                  border-radius: 10px;
+                  border: black 1px solid;
+                  background-color: #ef4565;
+                "
+              >
+                <div class="d-flex justify-content-lg-start p-2 mb-2">
+                  <div>
+                    <h5 class="mb-1" style="color: white">
+                      <span
+                        th:if="${member.roles}"
+                        th:each="role : ${member.roles}"
+                        th:text="${#strings.replace(role.name, 'ROLE_', '') + ' '}"
+                      ></span>
+                      <span
+                        th:if="${member.membershipType}"
+                        th:text="'- ' + ${member.membershipType.typeName}"
+                      ></span>
+                    </h5>
+                  </div>
+                </div>
+
+                <div
+                  class="d-flex justify-content-lg-start justify-content-center p-2 mb-1"
+                >
+                  <div class="row">
+                    <div class="col">
+                      <p class="h5 mb-1">Birthdate</p>
+                      <p
+                        class="mb-0 text-muted"
+                        th:text="${#strings.substring(member.dateOfBirth, 5, 7) + '/' + #strings.substring(member.dateOfBirth, 8) + '/' + #strings.substring(member.dateOfBirth, 0, 4)}"
+                      ></p>
+                    </div>
+                    <div class="px-4 col">
+                      <p class="h5 mb-1">Phone</p>
+                      <p
+                        class="mb-0 text-muted"
+                        th:text="${member.phoneNumber}"
+                      ></p>
+                    </div>
+                    <div class="col">
+                      <p class="h5 mb-1">Gender</p>
+                      <p class="mb-0 text-muted" th:text="${member.gender}"></p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-lg-start px-2 mb-1">
+                  <div>
+                    <h5 class="mb-1">Address</h5>
+                    <div
+                      class="mb-2 pb-1"
+                      style="color: #2b2a2a"
+                      th:text="${member.address}"
+                    ></div>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-lg-start px-2 mb-1">
+                  <div>
+                    <h5 class="mb-1">Date Join</h5>
+                    <div
+                      class="mb-2 pb-1"
+                      style="color: #2b2a2a"
+                      th:text="${#strings.substring(member.dateJoin, 5, 7) + '/' + #strings.substring(member.dateJoin, 8) + '/' + #strings.substring(member.dateJoin, 0, 4)}"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bank info of profile  -->
+            <div
+              class="row mt-4 d-flex justify-content-center align-items-center text-center"
+            >
+              <div
+                class="col col-md-6 col-lg-5 text-center"
+                style="border-radius: 10px; background-color: #efefef"
+              >
+                <div
+                  class="d-flex justify-content-lg-start justify-content-center p-2"
+                >
+                  <div class="container">
+                    <div class="row justify-content-between">
+                      <div class="col">
+                        <p class="h5 mb-2">Bank Account</p>
+                      </div>
+                    </div>
+                    <div class="row justify-content-between">
+                      <div class="col">
+                        <p class="h6 mb-1">Bank Name</p>
+                        <p
+                          class="mb-0 text-muted"
+                          th:text="${member.bankAccountNumber.bankName}"
+                        ></p>
+                      </div>
+                      <div class="px-4 col">
+                        <p class="h6 mb-1">Account Number</p>
+                        <p
+                          class="mb-0 text-muted"
+                          th:text="${'x' + #strings.substring(member.bankAccountNumber.accountNumber, #strings.length(member.bankAccountNumber.accountNumber) -4)}"
+                        ></p>
+                      </div>
+                      <div class="col">
+                        <p class="h6 mb-1">Routine</p>
+                        <p
+                          class="mb-0 text-muted"
+                          th:text="${member.bankAccountNumber.routineNumber}"
+                        ></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </main>
       </div>
