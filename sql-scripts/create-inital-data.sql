@@ -1,7 +1,7 @@
 USE gym_life;
 
 -- Insert initial roles
-INSERT INTO role (name) VALUES ('ROLE_OWNER'), ('ROLE_MANAGER'), ('ROLE_EMPLOYEE'), ('ROLE_TRAINNER'), ('ROLE_GYMMER');
+INSERT INTO role (name) VALUES ('ROLE_OWNER'), ('ROLE_MANAGER'), ('ROLE_EMPLOYEE'), ('ROLE_TRAINER'), ('ROLE_GYMMER');
 
 -- Insert an initial bank account
 INSERT INTO bank_account (account_number, bank_name, routine_number) VALUES ('12345678911234567', 'Wells Fargo', 121042882);
