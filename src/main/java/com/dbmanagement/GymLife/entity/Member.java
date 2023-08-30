@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -182,6 +184,7 @@ public class Member {
 
     public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+
     }
 
     public String getGender() {
@@ -290,6 +293,26 @@ public class Member {
 
     public void addRole(Role role) {
         getRoles().add(role);
+    }
+
+    public Collection<SimpleGrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
+        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+
+        for (Role role : roles) {
+            SimpleGrantedAuthority tempAuthority = new SimpleGrantedAuthority(role.getName());
+            authorities.add(tempAuthority);
+        }
+
+        return authorities;
+    }
+
+    public boolean checkContainARole(Role roleCheck) {
+        for (Role role : roles) {
+            if (roleCheck == role) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
