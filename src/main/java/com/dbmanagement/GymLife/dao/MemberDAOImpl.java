@@ -1,6 +1,7 @@
 package com.dbmanagement.GymLife.dao;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,58 @@ public class MemberDAOImpl implements MemberDAO {
     @Override
     public List<Member> retrieveAllMembers() {
         TypedQuery<Member> query = entityManager.createQuery("from Member", Member.class);
+
+        List<Member> result = null;
+
+        try {
+            result = query.getResultList();
+        } catch (Exception e) {
+            result = null;
+        }
+        return result;
+    }
+
+    @Override
+    public List<Member> retrieveAllGymmers() {
+        TypedQuery<Member> query = entityManager.createQuery(
+                "SELECT m FROM Member m JOIN m.roles r WHERE r.name = :roleName",
+                Member.class);
+        query.setParameter("roleName", "ROLE_GYMMER");
+
+        List<Member> result = null;
+
+        try {
+            result = query.getResultList();
+        } catch (Exception e) {
+            result = null;
+        }
+        return result;
+    }
+
+    @Override
+    public List<Member> retrieveAllStaffs() {
+        TypedQuery<Member> query = entityManager.createQuery(
+                "SELECT m FROM Member m JOIN m.roles r WHERE r.name != :roleName",
+                Member.class);
+        query.setParameter("roleName", "ROLE_GYMMER");
+
+        List<Member> result = null;
+
+        try {
+            result = query.getResultList();
+        } catch (Exception e) {
+            result = null;
+        }
+        return result;
+    }
+
+    @Override
+    public List<Member> retrieveAllStaffsWithoutOwner() {
+        TypedQuery<Member> query = entityManager.createQuery(
+                "SELECT m FROM Member m JOIN m.roles r WHERE r.name NOT IN (:roleList)",
+                Member.class);
+
+        query.setParameter("roleList", Arrays.asList("ROLE_GYMMER", "ROLE_OWNER"));
 
         List<Member> result = null;
 
@@ -251,4 +304,5 @@ public class MemberDAOImpl implements MemberDAO {
 
         query.executeUpdate();
     }
+
 }
