@@ -11,6 +11,12 @@ public interface MemberDAO {
 
     List<Member> retrieveAllMembers();
 
+    List<Member> retrieveAllGymmers();
+
+    List<Member> retrieveAllStaffs();
+
+    List<Member> retrieveAllStaffsWithoutOwner();
+
     // Member
     void save(Member thisMember);
 

@@ -194,6 +194,44 @@ public class AppDAOImpl implements AppDAO {
     }
 
     @Override
+    public Membership findMembershipByName(String name) {
+        TypedQuery<Membership> query = entityManager.createQuery("select m from Membership m where m.typeName = :data",
+                Membership.class);
+
+        query.setParameter("data", name);
+
+        Membership membership = null;
+        try {
+            membership = query.getSingleResult();
+        }
+        // empty member case
+        catch (Exception e) {
+
+        }
+
+        return membership;
+    }
+
+    @Override
+    public ArrayList<String> retrieveAllMembershipTypes() {
+        TypedQuery<Membership> query = entityManager.createQuery("select m from Membership m",
+                Membership.class);
+
+        ArrayList<String> memberships = new ArrayList<>();
+        try {
+            for (Membership m : query.getResultList()) {
+                memberships.add(m.getTypeName());
+            }
+        }
+        // empty member case
+        catch (Exception e) {
+
+        }
+
+        return memberships;
+    }
+
+    @Override
     @Transactional
     public void update(Membership thisMembership) {
         entityManager.merge(thisMembership);
@@ -246,18 +284,6 @@ public class AppDAOImpl implements AppDAO {
         // retrieve the correct member with its roles
         Member member = entityManager.find(Member.class, id);
         entityManager.remove(member);
-        // Member member = retrieveAMemberWithItsRoles(id);
-
-        // // Remove the association that Member has on its Role
-        // for (Role role : member.getRoles()) {
-        // retrieveARoleWithItsMembers(role.getId()).getMembers().remove(member);
-        // }
-        // // remove all roles
-        // // member.setRoles(null);
-        // member.getRoles().clear();
-
-        // // update to db
-        // entityManager.remove(member);
     }
 
     @Override
@@ -574,4 +600,5 @@ public class AppDAOImpl implements AppDAO {
 
         query.executeUpdate();
     }
+
 }

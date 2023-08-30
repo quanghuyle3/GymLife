@@ -1,5 +1,6 @@
 package com.dbmanagement.GymLife.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.dbmanagement.GymLife.entity.AccessLog;
@@ -57,6 +58,10 @@ public interface AppDAO {
     void save(Membership thisMembership);
 
     Membership findMembershipById(int id);
+
+    Membership findMembershipByName(String name);
+
+    ArrayList<String> retrieveAllMembershipTypes();
 
     void update(Membership thisMembership);
 
