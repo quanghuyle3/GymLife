@@ -1,6 +1,7 @@
 package com.dbmanagement.GymLife.dao;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,6 +102,49 @@ public class RoleDAOImpl implements RoleDAO {
         }
 
         return tempRole;
+    }
+
+    @Override
+    public Role retrieveOwnerRoleWithItMember() {
+        TypedQuery<Role> query = entityManager.createQuery("select r from Role r "
+                + "JOIN FETCH r.members "
+                + "where r.name = :data",
+                Role.class);
+
+        query.setParameter("data", "ROLE_OWNER");
+
+        Role tempRole;
+        try {
+            tempRole = query.getSingleResult();
+        }
+        // empty corresponding members
+        catch (Exception e) {
+            tempRole = null;
+        }
+
+        return tempRole;
+    }
+
+    @Override
+    public ArrayList<String> retrieveAllStaffRoleStrings() {
+        TypedQuery<Role> query = entityManager.createQuery(
+                "select r from Role r where r.name NOT IN (:excludedRoles)",
+                Role.class);
+
+        query.setParameter("excludedRoles", Arrays.asList("ROLE_OWNER", "ROLE_GYMMER"));
+
+        ArrayList<String> roles = new ArrayList<>();
+        try {
+            for (Role r : query.getResultList()) {
+                roles.add(r.getName());
+            }
+        }
+        // empty member case
+        catch (Exception e) {
+
+        }
+
+        return roles;
     }
 
 }
