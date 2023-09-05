@@ -46,6 +46,14 @@ public class Transaction {
         this.date = date;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public BankAccount getAccountSend() {
         return accountSend;
     }
@@ -91,5 +99,4 @@ public class Transaction {
         return "Transaction [id=" + id + ", accountSend=" + accountSend + ", accountReceive=" + accountReceive
                 + ", amount=" + amount + ", date=" + date + "]";
     }
-
 }
