@@ -163,7 +163,7 @@ public class RegistrationController {
             // for new info from the form that appears after this
             WebStaff webStaff = new WebStaff();
             // set the list of all roles again before returning the view
-            // theWebMember.setPreRoleStrings(roleDAO.retrieveAllStaffRoleStrings());
+            webStaff.setPreRoleStrings(roleDAO.retrieveAllStaffRoleStrings());
             theModel.addAttribute("webMember", webStaff);
 
             // bind the error message to a model attribute to display in View
@@ -207,7 +207,7 @@ public class RegistrationController {
             String message = "Successfully added staff: " + member.getId() + " - " + member.getFirstName() + " "
                     + member.getLastName() + ".";
             theModel.addAttribute("successfulRegistration", message);
-            return "staffs-retrieve";
+            return "retrieve/staffs-retrieve";
         }
 
         // a staff just added a new member
@@ -220,7 +220,7 @@ public class RegistrationController {
             String message = "Successfully added member: " + member.getId() + " - " + member.getFirstName() + " "
                     + member.getLastName() + ".";
             theModel.addAttribute("successfulRegistration", message);
-            return "members-retrieve";
+            return "retrieve/members-retrieve";
         }
 
         // a normal user registered as new member

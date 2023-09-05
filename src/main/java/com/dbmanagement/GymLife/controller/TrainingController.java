@@ -35,7 +35,7 @@ public class TrainingController {
 
         theModel.addAttribute("trainings", allTraining);
 
-        return "trainings-retrieve";
+        return "retrieve/trainings-retrieve";
     }
 
 }

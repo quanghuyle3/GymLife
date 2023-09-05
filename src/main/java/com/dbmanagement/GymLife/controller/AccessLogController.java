@@ -35,7 +35,7 @@ public class AccessLogController {
 
         theModel.addAttribute("accessLog", allAccessLog);
 
-        return "access-log-retrieve";
+        return "retrieve/access-log-retrieve";
     }
 
 }

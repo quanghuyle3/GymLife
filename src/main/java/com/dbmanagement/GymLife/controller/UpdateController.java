@@ -68,7 +68,7 @@ public class UpdateController {
             // add to model attribute to display in view
             theModel.addAttribute("webMember", webMember);
 
-            return "member-update";
+            return "update/member-update";
         } else {
             // convert member to webStaff to display in template
             WebStaff webStaff = new WebStaff(theMember, roleDAO.retrieveAllStaffRoleStrings());
@@ -76,7 +76,7 @@ public class UpdateController {
             // add to model attribute to display in view
             theModel.addAttribute("webMember", webStaff);
 
-            return "staff-update";
+            return "update/staff-update";
         }
 
     }
@@ -89,7 +89,7 @@ public class UpdateController {
 
         // form validation
         if (theBindingResult.hasErrors()) {
-            return "member-update";
+            return "update/member-update";
         }
 
         // Already DISALLOW change on username from form (UI)
@@ -119,7 +119,7 @@ public class UpdateController {
 
             // // set the list of membership types again before returning the view
             // theWebMember.setPreMembershipTypes(appDAO.retrieveAllMembershipTypes());
-            return "member-update";
+            return "update/member-update";
         }
 
         userService.update(theWebMember);
@@ -135,7 +135,7 @@ public class UpdateController {
 
         // form validation
         if (theBindingResult.hasErrors()) {
-            return "staff-update";
+            return "update/staff-update";
         }
 
         // check if bank number is already in database
@@ -152,7 +152,7 @@ public class UpdateController {
             // bind the error message to a model attribute to display in View
             theModel.addAttribute("registrationError", "Bank account number already associated with another member.");
 
-            return "staff-update";
+            return "update/staff-update";
         }
 
         userService.update(theWebStaff);
@@ -187,13 +187,13 @@ public class UpdateController {
             if (currentUpdatingMember.checkContainARole(roleDAO.findRoleByName("ROLE_GYMMER"))) {
                 // set the member list for UI in case it hasnt been loaded yet
                 theModel.addAttribute("members", memberDAO.retrieveAllGymmers());
-                return "members-retrieve";
+                return "retrieve/members-retrieve";
             }
             // if updating a staff, return to staffs retrieve page
             else {
                 // set the member list for UI in case it hasnt been loaded yet
                 theModel.addAttribute("members", memberDAO.retrieveAllStaffsWithoutOwner());
-                return "staffs-retrieve";
+                return "retrieve/staffs-retrieve";
             }
         }
 

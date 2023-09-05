@@ -36,7 +36,7 @@ public class TransactionController {
 
         theModel.addAttribute("transactions", allTransactions);
 
-        return "transactions-retrieve";
+        return "retrieve/transactions-retrieve";
     }
 
 }

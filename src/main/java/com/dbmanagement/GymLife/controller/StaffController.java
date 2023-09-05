@@ -32,7 +32,7 @@ public class StaffController {
 
         // add this object attribute values to spring model attribute
         theModel.addAttribute("members", allMembers);
-        return "staffs-retrieve";
+        return "retrieve/staffs-retrieve";
     }
 
     @GetMapping("delete")
@@ -48,7 +48,7 @@ public class StaffController {
         String message = "Successfully deleted staff: " + memberId;
         theModel.addAttribute("successfulDelete", message);
 
-        return "staffs-retrieve";
+        return "retrieve/staffs-retrieve";
     }
 
 }

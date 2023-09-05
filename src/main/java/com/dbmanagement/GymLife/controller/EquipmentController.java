@@ -35,7 +35,7 @@ public class EquipmentController {
 
         theModel.addAttribute("equipment", allEquipment);
 
-        return "equipment-retrieve";
+        return "retrieve/equipment-retrieve";
     }
 
 }

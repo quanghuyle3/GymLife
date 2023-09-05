@@ -36,7 +36,7 @@ public class MembershipController {
 
         theModel.addAttribute("memberships", allMemberships);
 
-        return "memberships-retrieve";
+        return "retrieve/memberships-retrieve";
     }
 
 }

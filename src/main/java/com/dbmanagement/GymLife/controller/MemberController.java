@@ -40,7 +40,7 @@ public class MemberController {
 
         // add this object attribute values to spring model attribute
         theModel.addAttribute("members", allMembers);
-        return "members-retrieve";
+        return "retrieve/members-retrieve";
     }
 
     @GetMapping("update")
@@ -58,7 +58,7 @@ public class MemberController {
             // add to model attribute to display in view
             theModel.addAttribute("webMember", webMember);
 
-            return "member-update";
+            return "update/member-update";
         } else {
             // convert member to webStaff to display in template
             WebStaff webStaff = new WebStaff(theMember,
@@ -67,7 +67,7 @@ public class MemberController {
             // add to model attribute to display in view
             theModel.addAttribute("webMember", webStaff);
 
-            return "staff-update";
+            return "update/staff-update";
         }
     }
 
@@ -85,7 +85,7 @@ public class MemberController {
         String message = "Successfully deleted member: " + memberId;
         theModel.addAttribute("successfulDelete", message);
 
-        return "members-retrieve";
+        return "retrieve/members-retrieve";
     }
 
 }

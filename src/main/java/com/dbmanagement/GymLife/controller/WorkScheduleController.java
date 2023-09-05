@@ -35,7 +35,7 @@ public class WorkScheduleController {
 
         theModel.addAttribute("workSchedule", allWorkSchedule);
 
-        return "work-schedule-retrieve";
+        return "retrieve/work-schedule-retrieve";
     }
 
 }

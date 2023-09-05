@@ -36,7 +36,7 @@ public class ManufactureController {
 
         theModel.addAttribute("manufactures", allManufacture);
 
-        return "manufactures-retrieve";
+        return "retrieve/manufactures-retrieve";
     }
 
 }
