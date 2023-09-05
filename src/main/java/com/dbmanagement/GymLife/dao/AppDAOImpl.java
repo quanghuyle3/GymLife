@@ -142,6 +142,21 @@ public class AppDAOImpl implements AppDAO {
         entityManager.remove(manufacture);
     }
 
+    @Override
+    public List<Manufacture> retrieveAllManufacture() {
+        TypedQuery<Manufacture> query = entityManager.createQuery("select m from Manufacture m",
+                Manufacture.class);
+
+        List<Manufacture> result = null;
+        try {
+            result = query.getResultList();
+        } catch (Exception e) {
+            result = new ArrayList<>();
+        }
+
+        return result;
+    }
+
     // TRANSACTION
 
     @Override
@@ -155,6 +170,21 @@ public class AppDAOImpl implements AppDAO {
         return entityManager.find(Transaction.class, id);
     }
 
+    @Override
+    public List<Transaction> retrieveAllTransaction() {
+        TypedQuery<Transaction> query = entityManager.createQuery("select t from Transaction t",
+                Transaction.class);
+
+        List<Transaction> result = null;
+        try {
+            result = query.getResultList();
+        } catch (Exception e) {
+            result = new ArrayList<>();
+        }
+
+        return result;
+    }
+
     // EQUIPMENT
 
     @Override
@@ -166,6 +196,21 @@ public class AppDAOImpl implements AppDAO {
     @Override
     public Equipment findEquipmentBySerials(String serials) {
         return entityManager.find(Equipment.class, serials);
+    }
+
+    @Override
+    public List<Equipment> retrieveAllEquipment() {
+        TypedQuery<Equipment> query = entityManager.createQuery("select e from Equipment e",
+                Equipment.class);
+
+        List<Equipment> result = null;
+        try {
+            result = query.getResultList();
+        } catch (Exception e) {
+            result = new ArrayList<>();
+        }
+
+        return result;
     }
 
     @Override
@@ -210,6 +255,21 @@ public class AppDAOImpl implements AppDAO {
         }
 
         return membership;
+    }
+
+    @Override
+    public List<Membership> retrieveAllMembership() {
+        TypedQuery<Membership> query = entityManager.createQuery("select m from Membership m",
+                Membership.class);
+
+        List<Membership> result = null;
+        try {
+            result = query.getResultList();
+        } catch (Exception e) {
+            result = new ArrayList<>();
+        }
+
+        return result;
     }
 
     @Override
@@ -337,6 +397,21 @@ public class AppDAOImpl implements AppDAO {
         catch (Exception e) {
             thisMember.setAccessLogs(new ArrayList<>());
         }
+    }
+
+    @Override
+    public List<AccessLog> retrieveAllAccessLog() {
+        TypedQuery<AccessLog> query = entityManager.createQuery("select al from AccessLog al",
+                AccessLog.class);
+
+        List<AccessLog> result = null;
+        try {
+            result = query.getResultList();
+        } catch (Exception e) {
+            result = new ArrayList<>();
+        }
+
+        return result;
     }
 
     // WORK SCHEDULE

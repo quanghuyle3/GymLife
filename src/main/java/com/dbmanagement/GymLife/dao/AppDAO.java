@@ -40,15 +40,21 @@ public interface AppDAO {
 
     void deleteManufactureById(int theId);
 
+    List<Manufacture> retrieveAllManufacture();
+
     // Transaction
     void save(Transaction thisTransaction);
 
     Transaction findTransactionById(int id);
 
+    List<Transaction> retrieveAllTransaction();
+
     // Equipment
     void save(Equipment thisEquipment);
 
     Equipment findEquipmentBySerials(String serials);
+
+    List<Equipment> retrieveAllEquipment();
 
     void update(Equipment thisEquipment);
 
@@ -60,6 +66,8 @@ public interface AppDAO {
     Membership findMembershipById(int id);
 
     Membership findMembershipByName(String name);
+
+    List<Membership> retrieveAllMembership();
 
     ArrayList<String> retrieveAllMembershipTypes();
 
@@ -101,6 +109,8 @@ public interface AppDAO {
 
     void update(AccessLog thisAccessLog);
     // no delete method
+
+    List<AccessLog> retrieveAllAccessLog();
 
     // Work Schedule
     void save(WorkSchedule thisWorkSchedule);
