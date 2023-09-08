@@ -315,24 +315,25 @@
             <!-- General info of profile -->
             <div class="row d-flex justify-content-center">
               <div
-                class="col col-md-3 col-lg-2 text-center"
+                class="col col-auto p-2 text-center"
                 style="
                   border-radius: 10px;
                   border: black 1px solid;
                   background-color: #ef4565;
+                  max-width: 300px;
                 "
               >
                 <img
                   src="/images/avatar/default-ava.png"
                   alt="My Avatar"
-                  class="img-fluid mt-2"
+                  class="img-fluid mt-1"
                   style="
                     background-color: white;
                     width: 180px;
                     border-radius: 10px;
                   "
                 />
-                <div class="my-2">
+                <div class="my-2 mx-2">
                   <h2
                     th:text="${member.firstName} + ' ' + ${member.lastName}"
                   ></h2>
