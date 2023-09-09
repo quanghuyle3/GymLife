@@ -53,4 +53,14 @@ public class MainController {
         return "my-profile";
     }
 
+    @GetMapping("/membership")
+    public String showMembershipOptions() {
+        return "membership";
+    }
+
+    @GetMapping("/contact")
+    public String showContact() {
+        return "contact";
+    }
+
 }
