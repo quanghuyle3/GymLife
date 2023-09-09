@@ -319,22 +319,22 @@
                 <button
                   type="button"
                   class="btn btn-lg btn-outline-primary"
-                  onclick="window.location.href='/register/staffForm';"
+                  onclick="window.location.href='/work-schedule/schedule-shift';"
                 >
-                  Add schedule
+                  Schedule Shift
                 </button>
               </div>
             </div>
           </div>
 
-          <!-- Place for messages: successful registration, error, alert etc ... -->
+          <!-- Place for messages: successful schedule, error, alert etc ... -->
           <div class="form-group">
             <div class="col-xs-15">
               <div>
-                <!-- Check for successful registration message -->
-                <div th:if="${successfulRegistration}">
+                <!-- Check for successful schedule message -->
+                <div th:if="${successfulSchedule}">
                   <div class="alert alert-success col-xs-offset-1 col-xs-10">
-                    <span th:text="${successfulRegistration}"></span>
+                    <span th:text="${successfulSchedule}"></span>
                   </div>
                 </div>
 
@@ -409,7 +409,7 @@
                           href=""
                           th:href="@{/work-schedule/delete(wsId=${ws.id})}"
                           class="btn btn-sm btn-outline-danger"
-                          onclick="return confirm('Are you sure to delete this schedule?')"
+                          onclick="return confirm('Are you sure to delete this shift?')"
                           >Delete</a
                         >
                       </div>
