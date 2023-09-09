@@ -19,6 +19,8 @@ public interface AppDAO {
     // Bank Account
     void save(BankAccount thisBankAccount);
 
+    List<BankAccount> retrieveAllBankAccount();
+
     BankAccount findBankAccountByAccountNumber(String theAccountNumber);
 
     void retrieveTransactionSendByBankAccount(BankAccount bankAccount);

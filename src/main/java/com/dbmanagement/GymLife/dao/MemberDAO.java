@@ -17,6 +17,8 @@ public interface MemberDAO {
 
     List<Member> retrieveAllStaffsWithoutOwner();
 
+    List<Member> retrieveAllTrainers();
+
     // Member
     void save(Member thisMember);
 

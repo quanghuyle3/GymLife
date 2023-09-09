@@ -111,6 +111,23 @@ public class MemberDAOImpl implements MemberDAO {
         return result;
     }
 
+    @Override
+    public List<Member> retrieveAllTrainers() {
+        TypedQuery<Member> query = entityManager.createQuery(
+                "SELECT m FROM Member m JOIN m.roles r WHERE r.name = :roleName",
+                Member.class);
+        query.setParameter("roleName", "ROLE_TRAINER");
+
+        List<Member> result = null;
+
+        try {
+            result = query.getResultList();
+        } catch (Exception e) {
+            result = null;
+        }
+        return result;
+    }
+
     // MEMBER
     @Override
     @Transactional

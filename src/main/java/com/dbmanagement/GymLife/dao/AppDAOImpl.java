@@ -46,6 +46,21 @@ public class AppDAOImpl implements AppDAO {
     }
 
     @Override
+    public List<BankAccount> retrieveAllBankAccount() {
+        TypedQuery<BankAccount> query = entityManager.createQuery("select b from BankAccount b",
+                BankAccount.class);
+
+        List<BankAccount> result = null;
+        try {
+            result = query.getResultList();
+        } catch (Exception e) {
+            result = new ArrayList<>();
+        }
+
+        return result;
+    }
+
+    @Override
     public BankAccount findBankAccountByAccountNumber(String theAccountNumber) {
         return entityManager.find(BankAccount.class, theAccountNumber);
     }
@@ -172,7 +187,7 @@ public class AppDAOImpl implements AppDAO {
 
     @Override
     public List<Transaction> retrieveAllTransaction() {
-        TypedQuery<Transaction> query = entityManager.createQuery("select t from Transaction t",
+        TypedQuery<Transaction> query = entityManager.createQuery("select t from Transaction t ORDER BY t.id DESC",
                 Transaction.class);
 
         List<Transaction> result = null;
@@ -200,7 +215,8 @@ public class AppDAOImpl implements AppDAO {
 
     @Override
     public List<Equipment> retrieveAllEquipment() {
-        TypedQuery<Equipment> query = entityManager.createQuery("select e from Equipment e",
+        TypedQuery<Equipment> query = entityManager.createQuery(
+                "select e from Equipment e ORDER BY e.dateImported DESC, e.transactionId.id DESC",
                 Equipment.class);
 
         List<Equipment> result = null;
@@ -401,7 +417,7 @@ public class AppDAOImpl implements AppDAO {
 
     @Override
     public List<AccessLog> retrieveAllAccessLog() {
-        TypedQuery<AccessLog> query = entityManager.createQuery("select al from AccessLog al",
+        TypedQuery<AccessLog> query = entityManager.createQuery("select al from AccessLog al ORDER BY al.id DESC",
                 AccessLog.class);
 
         List<AccessLog> result = null;
