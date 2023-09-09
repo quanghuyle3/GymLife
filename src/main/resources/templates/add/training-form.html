@@ -325,362 +325,141 @@
           <div
             class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
           >
-            <h1 class="h2">New Staff Registration</h1>
+            <h1 class="h2">Add Training Log</h1>
           </div>
           <form
             action="#"
-            th:action="@{/register/staffProcess}"
-            th:object="${webMember}"
+            th:action="@{/trainings/training-process}"
+            th:object="${webTraining}"
             method="POST"
-            class="form-horizontal row g-3"
-            onsubmit="return validateCheckbox()"
+            class=""
           >
             <!-- Place for messages: error, alert etc ... -->
-            <div class="form-group">
-              <div class="col-xs-15">
+            <!-- <div class="form-group"> -->
+            <div class="row d-flex justify-content-center">
+              <div class="col-md-5">
                 <div>
-                  <!-- Check for registration error -->
+                  <!-- Check for violation constraint message -->
 
-                  <div th:if="${registrationError}">
+                  <div th:if="${violationConstraint}">
                     <div class="alert alert-danger col-xs-offset-1 col-xs-10">
-                      <span th:text="${registrationError}"></span>
+                      <span th:text="${violationConstraint}"></span>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-
-            <div class="col-md-4">
-              <label for="inputEmail4" class="form-label">Email</label>
-              <input
-                id="inputEmail4"
-                type="email"
-                th:field="*{email}"
-                class="form-control"
-              />
-              <div
-                th:if="${#fields.hasErrors('email')}"
-                style="margin-bottom: 25px"
-                class="text-danger"
-              >
-                <ul>
-                  <li
-                    th:each="err : ${#fields.errors('email')}"
-                    th:text="${err}"
-                  />
-                </ul>
+            <!-- </div> -->
+            <div class="row d-flex justify-content-center">
+              <div class="col-md-5">
+                <label for="trainerInput" class="">Trainer (*)</label>
+                <select
+                  id="trainerInput"
+                  th:field="*{trainerId}"
+                  class="form-select mb-3"
+                >
+                  <option
+                    th:each="trainer : ${webTraining.preTrainerList}"
+                    th:value="${trainer.id}"
+                    th:text="${#strings.substring(trainer.roles.?[true][0].name, 5)} + ' - ' + ${trainer.id} + ' - ' + ${trainer.firstName} + ' ' + ${trainer.lastName}"
+                  ></option>
+                </select>
+                <div
+                  th:if="${#fields.hasErrors('trainerId')}"
+                  style="margin-bottom: 25px"
+                  class="text-danger"
+                >
+                  <ul>
+                    <li
+                      th:each="err : ${#fields.errors('trainerId')}"
+                      th:text="${err}"
+                    />
+                  </ul>
+                </div>
               </div>
             </div>
-            <div class="col-md-4">
-              <label for="inputUsername4" class="form-label">Username</label>
-              <input
-                id="inputUsername4"
-                type="text"
-                th:field="*{userName}"
-                class="form-control"
-              />
-              <div
-                th:if="${#fields.hasErrors('userName')}"
-                style="margin-bottom: 25px"
-                class="text-danger"
-              >
-                <ul>
-                  <li
-                    th:each="err : ${#fields.errors('userName')}"
-                    th:text="${err}"
-                  />
-                </ul>
+            <div class="row d-flex justify-content-center">
+              <div class="col-md-5">
+                <label for="studentInput" class="">Student (*)</label>
+                <select
+                  id="studentInput"
+                  th:field="*{studentId}"
+                  class="form-select mb-3"
+                >
+                  <option
+                    th:each="student : ${webTraining.preStudentList}"
+                    th:value="${student.id}"
+                    th:text="${#strings.substring(student.roles.?[true][0].name, 5)} + ' - ' + ${student.id} + ' - ' + ${student.firstName} + ' ' + ${student.lastName}"
+                  ></option>
+                </select>
+                <div
+                  th:if="${#fields.hasErrors('studentId')}"
+                  style="margin-bottom: 25px"
+                  class="text-danger"
+                >
+                  <ul>
+                    <li
+                      th:each="err : ${#fields.errors('studentId')}"
+                      th:text="${err}"
+                    />
+                  </ul>
+                </div>
               </div>
             </div>
-            <div class="col-md-4">
-              <label for="inputPassword4" class="form-label">Password</label>
-              <input
-                id="inputPassword4"
-                type="password"
-                th:field="*{password}"
-                class="form-control"
-              />
-              <div
-                th:if="${#fields.hasErrors('password')}"
-                style="margin-bottom: 25px"
-                class="text-danger"
-              >
-                <ul>
-                  <li
-                    th:each="err : ${#fields.errors('password')}"
-                    th:text="${err}"
-                  />
-                </ul>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <label for="inputFirstname4" class="form-label">First name</label>
-              <input
-                id="inputFirstname4"
-                type="text"
-                th:field="*{firstName}"
-                class="form-control"
-              />
-              <div
-                th:if="${#fields.hasErrors('firstName')}"
-                style="margin-bottom: 25px"
-                class="text-danger"
-              >
-                <ul>
-                  <li
-                    th:each="err : ${#fields.errors('firstName')}"
-                    th:text="${err}"
-                  />
-                </ul>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <label for="inputLastname4" class="form-label">Last name</label>
-              <input
-                id="inputLastname4"
-                type="text"
-                th:field="*{lastName}"
-                class="form-control"
-              />
-              <div
-                th:if="${#fields.hasErrors('lastName')}"
-                style="margin-bottom: 25px"
-                class="text-danger"
-              >
-                <ul>
-                  <li
-                    th:each="err : ${#fields.errors('lastName')}"
-                    th:text="${err}"
-                  />
-                </ul>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <label for="inputGender4" class="form-label">Gender</label>
-              <select
-                th:field="*{gender}"
-                id="inputGender4"
-                class="form-select"
-              >
-                <option th:value="Male">Male</option>
-                <option th:value="Female">Female</option>
-                <option th:value="Other">Other</option>
-              </select>
-              <div
-                th:if="${#fields.hasErrors('gender')}"
-                style="margin-bottom: 25px"
-                class="text-danger"
-              >
-                <ul>
-                  <li
-                    th:each="err : ${#fields.errors('gender')}"
-                    th:text="${err}"
-                  />
-                </ul>
-              </div>
-            </div>
-            <div class="col-12">
-              <label for="inputAddress" class="form-label">Address</label>
-              <input
-                type="text"
-                id="inputAddress"
-                placeholder="1234 Sample St, City, State 95100"
-                th:field="*{address}"
-                class="form-control"
-              />
-              <div
-                th:if="${#fields.hasErrors('address')}"
-                style="margin-bottom: 25px"
-                class="text-danger"
-              >
-                <ul>
-                  <li
-                    th:each="err : ${#fields.errors('address')}"
-                    th:text="${err}"
-                  />
-                </ul>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <label for="inputPhonenumber4" class="form-label"
-                >Phone number</label
-              >
-              <input
-                id="inputPhonenumber4"
-                type="tel"
-                pattern="[0-9]{10}(|-[0-9]{4})"
-                th:field="*{phoneNumber}"
-                placeholder="XXXXXXXXXX or XXXXXXXXXX-XXXX"
-                class="form-control"
-              />
-              <div
-                th:if="${#fields.hasErrors('phoneNumber')}"
-                style="margin-bottom: 25px"
-                class="text-danger"
-              >
-                <ul>
-                  <li
-                    th:each="err : ${#fields.errors('phoneNumber')}"
-                    th:text="${err}"
-                  />
-                </ul>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <label for="inputDOB4" class="form-label">Date of birth</label>
-              <input
-                id="inputDOB4"
-                type="date"
-                th:field="*{dateOfBirth}"
-                class="form-control"
-              />
-              <div
-                th:if="${#fields.hasErrors('dateOfBirth')}"
-                style="margin-bottom: 25px"
-                class="text-danger"
-              >
-                <ul>
-                  <li
-                    th:each="err : ${#fields.errors('dateOfBirth')}"
-                    th:text="${err}"
-                  />
-                </ul>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <label for="inputRole4" class="form-label">Role</label>
-              <select id="inputRole4" th:field="*{role}" class="form-select">
-                <option
-                  th:each="role : ${webMember.preRoleStrings}"
-                  th:value="${role}"
-                  th:text="${role}"
-                ></option>
-              </select>
-              <!-- <div
-                th:if="${#fields.hasErrors('membershipType')}"
-                style="margin-bottom: 25px"
-                class="text-danger"
-              >
-                <ul>
-                  <li
-                    th:each="err : ${#fields.errors('membershipType')}"
-                    th:text="${err}"
-                  />
-                </ul>
-              </div> -->
-            </div>
-            <div class="col-md-3">
-              <label for="inputDatejoin4" class="form-label">Date Join</label>
-              <input
-                id="inputDatejoin4"
-                type="date"
-                th:field="*{dateJoin}"
-                class="form-control"
-              />
-              <div
-                th:if="${#fields.hasErrors('dateJoin')}"
-                style="margin-bottom: 25px"
-                class="text-danger"
-              >
-                <ul>
-                  <li
-                    th:each="err : ${#fields.errors('dateJoin')}"
-                    th:text="${err}"
-                  />
-                </ul>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <label for="inputBankname4" class="form-label">Bank Name</label>
-              <input
-                id="inputBankname4"
-                type="text"
-                th:field="*{bankName}"
-                class="form-control"
-              />
-              <div
-                th:if="${#fields.hasErrors('bankName')}"
-                style="margin-bottom: 25px"
-                class="text-danger"
-              >
-                <ul>
-                  <li
-                    th:each="err : ${#fields.errors('bankName')}"
-                    th:text="${err}"
-                  />
-                </ul>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <label for="inputBankaccountnumber4" class="form-label"
-                >Bank Account Number</label
-              >
-              <input
-                id="inputBankaccountnumber4"
-                type="number"
-                th:field="*{bankAccountNumber}"
-                class="form-control"
-              />
-
-              <div
-                th:if="${#fields.hasErrors('bankAccountNumber')}"
-                style="margin-bottom: 25px"
-                class="text-danger"
-              >
-                <ul>
-                  <li
-                    th:each="err : ${#fields.errors('bankAccountNumber')}"
-                    th:text="${err}"
-                  />
-                </ul>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <label for="inputRoutinenumber4" class="form-label"
-                >Routine Number</label
-              >
-              <input
-                id="inputRoutinenumber4"
-                type="number"
-                min="100000000"
-                max="999999999"
-                th:field="*{routineNumber}"
-                class="form-control"
-              />
-
-              <div
-                th:if="${#fields.hasErrors('routineNumber')}"
-                style="margin-bottom: 25px"
-                class="text-danger"
-              >
-                <ul>
-                  <li
-                    th:each="err : ${#fields.errors('routineNumber')}"
-                    th:text="${err}"
-                  />
-                </ul>
-              </div>
-            </div>
-            <div class="col-12">
-              <div class="form-check d-flex justify-content-center">
+            <div class="row d-flex justify-content-center">
+              <div class="col-md-5">
+                <label for="dateStartInput" class="">Date Start (*)</label>
                 <input
-                  class="form-check-input"
-                  type="checkbox"
-                  id="gridCheck"
+                  id="dateStartInput"
+                  type="date"
+                  th:field="*{dateStart}"
+                  class="form-control mb-3"
                 />
-                <label class="form-check-label" for="gridCheck">
-                  This staff agrees to all Terms of Services.
-                </label>
+                <div
+                  th:if="${#fields.hasErrors('dateStart')}"
+                  style="margin-bottom: 25px"
+                  class="text-danger"
+                >
+                  <ul>
+                    <li
+                      th:each="err : ${#fields.errors('dateStart')}"
+                      th:text="${err}"
+                    />
+                  </ul>
+                </div>
               </div>
             </div>
-            <div class="col-12 d-flex justify-content-center">
-              <button
-                type="submit"
-                class="btn btn-primary"
-                style="width: 50%; height: 40px"
-              >
-                Register
-              </button>
+
+            <div class="row d-flex justify-content-center">
+              <div class="col-md-5">
+                <label for="dateEndInput" class="">Date End</label>
+                <input
+                  id="dateEndInput"
+                  type="date"
+                  th:field="*{dateEnd}"
+                  class="form-control mb-3"
+                />
+                <div
+                  th:if="${#fields.hasErrors('dateEnd')}"
+                  style="margin-bottom: 25px"
+                  class="text-danger"
+                >
+                  <ul>
+                    <li
+                      th:each="err : ${#fields.errors('dateEnd')}"
+                      th:text="${err}"
+                    />
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="row d-flex justify-content-center">
+              <div class="col-5 mt-2">
+                <button type="submit" class="col-12 mt-2 btn btn-primary">
+                  Add
+                </button>
+              </div>
             </div>
           </form>
         </main>
