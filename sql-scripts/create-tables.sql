@@ -85,7 +85,9 @@ CREATE TABLE training (
         date_end DATE,
         CONSTRAINT member_fk_1 FOREIGN KEY (trainer_id) REFERENCES member(id),
         CONSTRAINT member_fk_2 FOREIGN KEY (student_id) REFERENCES member(id),
-        CONSTRAINT check_trainer_student_different CHECK (trainer_id <> student_id));
+        CONSTRAINT check_trainer_student_different CHECK (trainer_id <> student_id),
+        CONSTRAINT check_date_order CHECK (date_start <= date_end OR date_end IS NULL));
+        
         
 DROP TABLE IF EXISTS work_schedule;
 CREATE TABLE work_schedule (
