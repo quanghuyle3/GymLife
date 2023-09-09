@@ -319,7 +319,7 @@
                 <button
                   type="button"
                   class="btn btn-lg btn-outline-primary"
-                  onclick="window.location.href='/register/staffForm';"
+                  onclick="window.location.href='/memberships/add-membership';"
                 >
                   Add membership
                 </button>
@@ -332,9 +332,9 @@
             <div class="col-xs-15">
               <div>
                 <!-- Check for successful registration message -->
-                <div th:if="${successfulRegistration}">
+                <div th:if="${successMessage}">
                   <div class="alert alert-success col-xs-offset-1 col-xs-10">
-                    <span th:text="${successfulRegistration}"></span>
+                    <span th:text="${successMessage}"></span>
                   </div>
                 </div>
 
@@ -391,7 +391,7 @@
                           href=""
                           th:href="@{/memberships/delete(membershipId=${membership.id})}"
                           class="btn btn-sm btn-outline-danger"
-                          onclick="return confirm('Are you sure to delete this membership type? Make sure to assign new membership type for current members before preceeding this action.')"
+                          onclick="return confirm('Are you sure to delete this membership type? Make sure to assign new membership type for current members associated to this membership type before proceeding this action.')"
                           >Delete</a
                         >
                       </div>

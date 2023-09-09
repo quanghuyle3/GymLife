@@ -319,7 +319,7 @@
                 <button
                   type="button"
                   class="btn btn-lg btn-outline-primary"
-                  onclick="window.location.href='/register/memberForm';"
+                  onclick="window.location.href='/transactions/add-transaction';"
                 >
                   Proceed transaction
                 </button>
@@ -332,9 +332,9 @@
             <div class="col-xs-15">
               <div>
                 <!-- Check for successful registration message -->
-                <div th:if="${successfulRegistration}">
+                <div th:if="${successMessage}">
                   <div class="alert alert-success col-xs-offset-1 col-xs-10">
-                    <span th:text="${successfulRegistration}"></span>
+                    <span th:text="${successMessage}"></span>
                   </div>
                 </div>
 
