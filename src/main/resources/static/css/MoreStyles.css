@@ -79,3 +79,11 @@
   .navbar .form-control {
     padding: .75rem 1rem;
   }
+
+  .text-blue {
+    color: #094067;
+  }
+
+  .text-red {
+    color: #ef4565;
+  }
