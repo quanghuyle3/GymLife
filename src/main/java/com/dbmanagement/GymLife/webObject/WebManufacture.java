@@ -1,5 +1,7 @@
 package com.dbmanagement.GymLife.webObject;
 
+import com.dbmanagement.GymLife.entity.Manufacture;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -15,11 +17,9 @@ public class WebManufacture {
     @Size(min = 1, message = "Address is required")
     private String address;
 
-    // @NotNull(message = "Phone number is required")
-    // @Size(min = 1, message = "Phone number is required")
     private String phoneNumber;
 
-    // @NotNull(message = "Email is required")
+    // some small private manufacture doesn't email
     @Email(message = "Invalid email format")
     private String email;
 
@@ -35,7 +35,24 @@ public class WebManufacture {
     @Pattern(regexp = "\\d{9}", message = "Routine number must have exactly 9 digits")
     private String routineNumber;
 
+    private int id;
+
     public WebManufacture() {
+    }
+
+    public WebManufacture(Manufacture manufacture) {
+        this.name = manufacture.getName();
+        this.address = manufacture.getAddress();
+        if (manufacture.getPhoneNumber() != null) {
+            this.phoneNumber = manufacture.getPhoneNumber();
+        }
+        if (manufacture.getEmail() != null) {
+            this.email = manufacture.getEmail();
+        }
+        this.bankName = manufacture.getBankAccount().getBankName();
+        this.bankAccountNumber = manufacture.getBankAccount().getAccountNumber();
+        this.routineNumber = String.valueOf(manufacture.getBankAccount().getRoutineNumber());
+        this.id = manufacture.getId();
     }
 
     public String getName() {
@@ -92,6 +109,14 @@ public class WebManufacture {
 
     public void setRoutineNumber(String routineNumber) {
         this.routineNumber = routineNumber;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
 }

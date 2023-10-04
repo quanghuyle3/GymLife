@@ -1,5 +1,7 @@
 package com.dbmanagement.GymLife.webObject;
 
+import com.dbmanagement.GymLife.entity.Membership;
+
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -16,7 +18,15 @@ public class WebMembership {
     // @Max(1000)
     private String price;
 
+    private int id;
+
     public WebMembership() {
+    }
+
+    public WebMembership(Membership membership) {
+        this.typeName = membership.getTypeName();
+        this.price = String.valueOf(membership.getPrice());
+        this.id = membership.getId();
     }
 
     public String getTypeName() {
@@ -33,6 +43,14 @@ public class WebMembership {
 
     public void setPrice(String price) {
         this.price = price;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
 }

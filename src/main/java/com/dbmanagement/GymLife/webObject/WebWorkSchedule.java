@@ -3,6 +3,7 @@ package com.dbmanagement.GymLife.webObject;
 import java.util.List;
 
 import com.dbmanagement.GymLife.entity.Member;
+import com.dbmanagement.GymLife.entity.WorkSchedule;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -14,7 +15,6 @@ public class WebWorkSchedule {
     private String workDate;
 
     @NotNull(message = "Staff is required")
-    // @Size(min = 1, message = "Staff is required")
     private int staffId;
 
     @NotNull(message = "Time start is required")
@@ -29,7 +29,19 @@ public class WebWorkSchedule {
 
     private List<String> preTimeStrings;
 
+    private int id;
+
     public WebWorkSchedule() {
+    }
+
+    public WebWorkSchedule(WorkSchedule ws, List<Member> preStaffList, List<String> preTimeStrings) {
+        this.workDate = ws.getWorkDate();
+        this.staffId = ws.getStaffId().getId();
+        this.timeStart = ws.getTimeStart().substring(0, 5);
+        this.timeEnd = ws.getTimeEnd().substring(0, 5);
+        this.preStaffList = preStaffList;
+        this.preTimeStrings = preTimeStrings;
+        this.id = ws.getId();
     }
 
     public String getWorkDate() {
@@ -78,6 +90,14 @@ public class WebWorkSchedule {
 
     public void setPreTimeStrings(List<String> preTimeStrings) {
         this.preTimeStrings = preTimeStrings;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
 }

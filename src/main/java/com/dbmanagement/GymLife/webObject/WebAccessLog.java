@@ -24,8 +24,6 @@ public class WebAccessLog {
 
     private List<Member> preMemberList;
 
-    // private List<String> preTimeStrings;
-
     public WebAccessLog() {
     }
 
@@ -68,13 +66,5 @@ public class WebAccessLog {
     public void setPreMemberList(List<Member> preMemberList) {
         this.preMemberList = preMemberList;
     }
-
-    // public List<String> getPreTimeStrings() {
-    // return preTimeStrings;
-    // }
-
-    // public void setPreTimeStrings(List<String> preTimeStrings) {
-    // this.preTimeStrings = preTimeStrings;
-    // }
 
 }

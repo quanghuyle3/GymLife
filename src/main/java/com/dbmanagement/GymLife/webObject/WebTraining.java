@@ -3,20 +3,21 @@ package com.dbmanagement.GymLife.webObject;
 import java.util.List;
 
 import com.dbmanagement.GymLife.entity.Member;
+import com.dbmanagement.GymLife.entity.Training;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class WebTraining {
 
-    @NotNull(message = "Staff is required")
+    @NotNull(message = "Trainer is required")
     private int trainerId;
 
-    @NotNull(message = "Staff is required")
+    @NotNull(message = "Student is required")
     private int studentId;
 
-    @NotNull(message = "Work date is required")
-    @Size(min = 1, message = "Work date is required")
+    @NotNull(message = "Start date is required")
+    @Size(min = 1, message = "Start date is required")
     private String dateStart;
 
     private String dateEnd;
@@ -25,7 +26,21 @@ public class WebTraining {
 
     private List<Member> preStudentList;
 
+    private int id;
+
     public WebTraining() {
+    }
+
+    public WebTraining(Training training, List<Member> preTrainerList, List<Member> preStudentList) {
+        this.trainerId = training.getTrainerId().getId();
+        this.studentId = training.getStudentId().getId();
+        this.dateStart = training.getDateStart();
+        if (training.getDateEnd() != null) {
+            this.dateEnd = training.getDateEnd();
+        }
+        this.preTrainerList = preTrainerList;
+        this.preStudentList = preStudentList;
+        this.id = training.getId();
     }
 
     public int getTrainerId() {
@@ -74,6 +89,14 @@ public class WebTraining {
 
     public void setPreStudentList(List<Member> preStudentList) {
         this.preStudentList = preStudentList;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
 }

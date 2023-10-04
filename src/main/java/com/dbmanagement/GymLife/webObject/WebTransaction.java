@@ -9,23 +9,23 @@ import jakarta.validation.constraints.Size;
 
 public class WebTransaction {
 
-    @NotNull(message = "Manufacture name is required")
-    @Size(min = 1, message = "Manufacture name is required")
+    @NotNull(message = "Account send is required")
+    @Size(min = 1, message = "Account send is required")
     private String accountSend;
 
-    @NotNull(message = "Manufacture name is required")
-    @Size(min = 1, message = "Manufacture name is required")
+    @NotNull(message = "Account receive is required")
+    @Size(min = 1, message = "Account receive is required")
     private String accountReceive;
 
-    @NotNull(message = "Manufacture name is required")
-    @Size(min = 1, message = "Manufacture name is required")
+    @NotNull(message = "Transaction amount is required")
+    @Size(min = 1, message = "Transaction amount is required")
     private String amount;
 
-    @NotNull(message = "Manufacture name is required")
-    @Size(min = 1, message = "Manufacture name is required")
+    @NotNull(message = "Transaction date is required")
+    @Size(min = 1, message = "Transaction date is required")
     private String date;
 
-    List<BankAccount> preBankAccountList;
+    private List<BankAccount> preBankAccountList;
 
     public WebTransaction() {
     }

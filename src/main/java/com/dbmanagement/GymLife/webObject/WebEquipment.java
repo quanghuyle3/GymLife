@@ -2,6 +2,7 @@ package com.dbmanagement.GymLife.webObject;
 
 import java.util.List;
 
+import com.dbmanagement.GymLife.entity.Equipment;
 import com.dbmanagement.GymLife.entity.Transaction;
 
 import jakarta.validation.constraints.Min;
@@ -31,6 +32,16 @@ public class WebEquipment {
     private List<String> preTargetList;
 
     public WebEquipment() {
+    }
+
+    public WebEquipment(Equipment e, List<Transaction> preTransactionList, List<String> preTargetList) {
+        this.serials = e.getSerials();
+        this.name = e.getName();
+        this.transactionId = e.getTransactionId().getId();
+        this.dateImported = e.getDateImported();
+        this.target = e.getTarget();
+        this.preTransactionList = preTransactionList;
+        this.preTargetList = preTargetList;
     }
 
     public String getSerials() {
