@@ -7,9 +7,7 @@ import com.dbmanagement.GymLife.entity.AccessLog;
 import com.dbmanagement.GymLife.entity.BankAccount;
 import com.dbmanagement.GymLife.entity.Equipment;
 import com.dbmanagement.GymLife.entity.Manufacture;
-import com.dbmanagement.GymLife.entity.Member;
 import com.dbmanagement.GymLife.entity.Membership;
-import com.dbmanagement.GymLife.entity.Role;
 import com.dbmanagement.GymLife.entity.Training;
 import com.dbmanagement.GymLife.entity.Transaction;
 import com.dbmanagement.GymLife.entity.WorkSchedule;
@@ -79,31 +77,6 @@ public interface AppDAO {
 
     void retrieveMembersByMembership(Membership thisMembership);
 
-    // Member
-    void save(Member thisMember);
-
-    Member findMemberById(int id);
-
-    void update(Member thisMember);
-
-    void deleteMemberById(int id);
-
-    Member findMemberByBankAccount(BankAccount bankAccount);
-
-    void retrieveAccessLogsByMember(Member thisMember);
-
-    void retrieveWorkSchedulesByMember(Member thisMember);
-
-    void retrieveTrainingAsTrainerByMember(Member thisMember);
-
-    void retrieveTrainingAsStudentByMember(Member thisMember);
-
-    Member retrieveAMemberWithItsRoles(int id);
-
-    void deleteMemberWithItsRoles(int id);
-
-    void deleteTrainingWorkScheduleAccessLogOfAMember(int id);
-
     // Access Log
     void save(AccessLog thisAccessLog);
 
@@ -113,6 +86,8 @@ public interface AppDAO {
     // no delete method
 
     List<AccessLog> retrieveAllAccessLog();
+
+    List<AccessLog> retrieve1000AccessLog();
 
     // Work Schedule
     void save(WorkSchedule thisWorkSchedule);
@@ -135,18 +110,5 @@ public interface AppDAO {
     void update(Training thisTraining);
 
     void deleteTrainingById(int id);
-
-    // Role
-    void save(Role thisRole);
-
-    Role findRoleById(int id);
-
-    List<Role> retrieveAllRole();
-
-    void update(Role thisRole);
-
-    void deleteRoleById(int id);
-
-    Role retrieveARoleWithItsMembers(int id);
 
 }

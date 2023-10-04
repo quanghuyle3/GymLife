@@ -77,6 +77,23 @@ public class MemberDAOImpl implements MemberDAO {
     }
 
     @Override
+    public List<Member> retrieveAllGymmersDESC() {
+        TypedQuery<Member> query = entityManager.createQuery(
+                "SELECT m FROM Member m JOIN m.roles r WHERE r.name = :roleName ORDER BY m.id DESC",
+                Member.class);
+        query.setParameter("roleName", "ROLE_GYMMER");
+
+        List<Member> result = null;
+
+        try {
+            result = query.getResultList();
+        } catch (Exception e) {
+            result = null;
+        }
+        return result;
+    }
+
+    @Override
     public List<Member> retrieveAllStaffs() {
         TypedQuery<Member> query = entityManager.createQuery(
                 "SELECT m FROM Member m JOIN m.roles r WHERE r.name != :roleName",
@@ -287,7 +304,6 @@ public class MemberDAOImpl implements MemberDAO {
             roleDAO.retrieveARoleWithItsMembers(role.getId()).getMembers().remove(member);
         }
         // remove all roles
-        // member.setRoles(null);
         member.getRoles().clear();
 
         // update to db
@@ -320,6 +336,23 @@ public class MemberDAOImpl implements MemberDAO {
         query.setParameter("data", id);
 
         query.executeUpdate();
+    }
+
+    @Override
+    public Member retrieveOwner() {
+        TypedQuery<Member> query = entityManager.createQuery(
+                "SELECT m FROM Member m JOIN m.roles r WHERE r.name = :roleName",
+                Member.class);
+        query.setParameter("roleName", "ROLE_OWNER");
+
+        Member result = null;
+
+        try {
+            result = query.getSingleResult();
+        } catch (Exception e) {
+            result = null;
+        }
+        return result;
     }
 
 }

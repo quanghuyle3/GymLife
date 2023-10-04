@@ -13,9 +13,13 @@ public interface MemberDAO {
 
     List<Member> retrieveAllGymmers();
 
+    List<Member> retrieveAllGymmersDESC();
+
     List<Member> retrieveAllStaffs();
 
     List<Member> retrieveAllStaffsWithoutOwner();
+
+    Member retrieveOwner();
 
     List<Member> retrieveAllTrainers();
 

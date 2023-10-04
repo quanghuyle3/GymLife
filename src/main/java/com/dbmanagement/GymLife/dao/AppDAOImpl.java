@@ -1,10 +1,7 @@
 package com.dbmanagement.GymLife.dao;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-
-import javax.management.AttributeList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -16,13 +13,11 @@ import com.dbmanagement.GymLife.entity.Equipment;
 import com.dbmanagement.GymLife.entity.Manufacture;
 import com.dbmanagement.GymLife.entity.Member;
 import com.dbmanagement.GymLife.entity.Membership;
-import com.dbmanagement.GymLife.entity.Role;
 import com.dbmanagement.GymLife.entity.Training;
 import com.dbmanagement.GymLife.entity.Transaction;
 import com.dbmanagement.GymLife.entity.WorkSchedule;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 
 @Repository
@@ -335,52 +330,6 @@ public class AppDAOImpl implements AppDAO {
         }
     }
 
-    // MEMBER
-    @Override
-    @Transactional
-    public void save(Member thisMember) {
-        entityManager.persist(thisMember);
-    }
-
-    @Override
-    public Member findMemberById(int id) {
-        return entityManager.find(Member.class, id);
-
-    }
-
-    @Override
-    @Transactional
-    public void update(Member thisMember) {
-        entityManager.merge(thisMember);
-    }
-
-    @Override
-    @Transactional
-    public void deleteMemberById(int id) {
-        // retrieve the correct member with its roles
-        Member member = entityManager.find(Member.class, id);
-        entityManager.remove(member);
-    }
-
-    @Override
-    public Member findMemberByBankAccount(BankAccount bankAccount) {
-        TypedQuery<Member> query = entityManager.createQuery("select m from Member m where m.bankAccountNumber = :data",
-                Member.class);
-
-        query.setParameter("data", bankAccount);
-
-        Member member = null;
-        try {
-            member = query.getSingleResult();
-        }
-        // empty member case
-        catch (Exception e) {
-
-        }
-
-        return member;
-    }
-
     // ACCESS LOG
     @Override
     @Transactional
@@ -400,24 +349,24 @@ public class AppDAOImpl implements AppDAO {
     }
 
     @Override
-    public void retrieveAccessLogsByMember(Member thisMember) {
-        TypedQuery<AccessLog> query = entityManager.createQuery("select a from AccessLog a where a.memberId = :data",
+    public List<AccessLog> retrieveAllAccessLog() {
+        TypedQuery<AccessLog> query = entityManager.createQuery("select al from AccessLog al ORDER BY al.id DESC",
                 AccessLog.class);
 
-        query.setParameter("data", thisMember);
-
+        List<AccessLog> result = null;
         try {
-            thisMember.setAccessLogs(query.getResultList());
+            result = query.getResultList();
+        } catch (Exception e) {
+            result = new ArrayList<>();
         }
-        // empty accessLog case
-        catch (Exception e) {
-            thisMember.setAccessLogs(new ArrayList<>());
-        }
+
+        return result;
     }
 
     @Override
-    public List<AccessLog> retrieveAllAccessLog() {
-        TypedQuery<AccessLog> query = entityManager.createQuery("select al from AccessLog al ORDER BY al.id DESC",
+    public List<AccessLog> retrieve1000AccessLog() {
+        TypedQuery<AccessLog> query = entityManager.createQuery(
+                "select al from AccessLog al ORDER BY al.id DESC LIMIT 1000",
                 AccessLog.class);
 
         List<AccessLog> result = null;
@@ -456,7 +405,7 @@ public class AppDAOImpl implements AppDAO {
 
     @Override
     public List<WorkSchedule> retrieveAllWorkSchedule() {
-        TypedQuery<WorkSchedule> query = entityManager.createQuery("select ws from WorkSchedule ws",
+        TypedQuery<WorkSchedule> query = entityManager.createQuery("select ws from WorkSchedule ws ORDER BY ws.id DESC",
                 WorkSchedule.class);
 
         List<WorkSchedule> result = null;
@@ -467,23 +416,6 @@ public class AppDAOImpl implements AppDAO {
         }
 
         return result;
-    }
-
-    @Override
-    public void retrieveWorkSchedulesByMember(Member thisMember) {
-        TypedQuery<WorkSchedule> query = entityManager.createQuery(
-                "select ws from WorkSchedule ws where ws.staffId = :data",
-                WorkSchedule.class);
-
-        query.setParameter("data", thisMember);
-
-        try {
-            thisMember.setWorkSchedules(query.getResultList());
-        }
-        // empty accessLog case
-        catch (Exception e) {
-            thisMember.setWorkSchedules(new ArrayList<>());
-        }
     }
 
     // TRAINING
@@ -500,7 +432,7 @@ public class AppDAOImpl implements AppDAO {
 
     @Override
     public List<Training> retrieveAllTraining() {
-        TypedQuery<Training> query = entityManager.createQuery("select t from Training t",
+        TypedQuery<Training> query = entityManager.createQuery("select t from Training t ORDER BY t.id DESC",
                 Training.class);
 
         List<Training> result = null;
@@ -523,173 +455,6 @@ public class AppDAOImpl implements AppDAO {
     @Transactional
     public void deleteTrainingById(int id) {
         entityManager.remove(entityManager.find(Training.class, id));
-    }
-
-    @Override
-    public void retrieveTrainingAsTrainerByMember(Member thisMember) {
-        TypedQuery<Training> query = entityManager.createQuery(
-                "select t from Training t where t.trainerId = :data",
-                Training.class);
-
-        query.setParameter("data", thisMember);
-
-        try {
-            thisMember.setTrainingsAsTrainer(query.getResultList());
-        }
-        // empty accessLog case
-        catch (Exception e) {
-            thisMember.setTrainingsAsTrainer(new ArrayList<>());
-        }
-    }
-
-    @Override
-    public void retrieveTrainingAsStudentByMember(Member thisMember) {
-        TypedQuery<Training> query = entityManager.createQuery(
-                "select t from Training t where t.studentId = :data",
-                Training.class);
-
-        query.setParameter("data", thisMember);
-
-        try {
-            thisMember.setTrainingsAsStudent(query.getResultList());
-        }
-        // empty accessLog case
-        catch (Exception e) {
-            thisMember.setTrainingsAsStudent(new ArrayList<>());
-        }
-    }
-
-    // ROLE
-    @Override
-    @Transactional
-    public void save(Role thisRole) {
-        entityManager.persist(thisRole);
-    }
-
-    @Override
-    public Role findRoleById(int id) {
-        return entityManager.find(Role.class, id);
-    }
-
-    @Override
-    public List<Role> retrieveAllRole() {
-        TypedQuery<Role> query = entityManager.createQuery("select r from Role r",
-                Role.class);
-
-        List<Role> result = null;
-
-        try {
-
-            result = query.getResultList();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            result = new ArrayList<>();
-        }
-
-        return result;
-    }
-
-    @Override
-    @Transactional
-    public void update(Role thisRole) {
-        entityManager.merge(thisRole);
-    }
-
-    @Override
-    @Transactional
-    public void deleteRoleById(int id) {
-        entityManager.remove(entityManager.find(Role.class, id));
-    }
-
-    @Override
-    public Role retrieveARoleWithItsMembers(int id) {
-        TypedQuery<Role> query = entityManager.createQuery("select r from Role r "
-                + "JOIN FETCH r.members "
-                + "where r.id = :data",
-                Role.class);
-
-        query.setParameter("data", id);
-
-        Role tempRole;
-        try {
-            tempRole = query.getSingleResult();
-        }
-        // empty corresponding members
-        catch (Exception e) {
-            tempRole = findRoleById(id);
-            tempRole.setMembers(new ArrayList<>());
-        }
-
-        return tempRole;
-    }
-
-    @Override
-    public Member retrieveAMemberWithItsRoles(int id) {
-        TypedQuery<Member> query = entityManager.createQuery("select m from Member m "
-                + "JOIN FETCH m.roles "
-                + "where m.id = :data",
-                Member.class);
-
-        query.setParameter("data", id);
-
-        Member tempMember;
-        try {
-            tempMember = query.getSingleResult();
-        }
-        // empty corresponding members
-        catch (Exception e) {
-            tempMember = findMemberById(id);
-            tempMember.setRoles(new ArrayList<>());
-        }
-
-        return tempMember;
-    }
-
-    @Override
-    @Transactional
-    // [Archive] the deleteMemberById can achieve this function
-    public void deleteMemberWithItsRoles(int id) {
-        // retrieve the correct member with its roles
-        Member member = retrieveAMemberWithItsRoles(id);
-
-        // Remove the association that Member has on its Role
-        for (Role role : member.getRoles()) {
-            retrieveARoleWithItsMembers(role.getId()).getMembers().remove(member);
-        }
-        // remove all roles
-        // member.setRoles(null);
-        member.getRoles().clear();
-
-        // update to db
-        entityManager.remove(member);
-
-    }
-
-    @Override
-    @Transactional
-    public void deleteTrainingWorkScheduleAccessLogOfAMember(int id) {
-
-        // delete access log
-        Query query = entityManager.createQuery("delete from AccessLog al where al.memberId.id = :data");
-
-        query.setParameter("data", id);
-
-        query.executeUpdate();
-
-        // delete work schedule
-        query = entityManager.createQuery("delete from WorkSchedule ws where ws.staffId.id = :data");
-
-        query.setParameter("data", id);
-
-        query.executeUpdate();
-
-        // delete work schedule
-        query = entityManager
-                .createQuery("delete from Training t where t.trainerId.id = :data or t.studentId.id = :data");
-
-        query.setParameter("data", id);
-
-        query.executeUpdate();
     }
 
 }
