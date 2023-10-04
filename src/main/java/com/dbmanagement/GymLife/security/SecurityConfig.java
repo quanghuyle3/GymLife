@@ -8,6 +8,7 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,16 +22,6 @@ import com.dbmanagement.GymLife.service.UserService;
 @Configuration
 public class SecurityConfig {
 
-    // @Bean
-    // public InMemoryUserDetailsManager userDetailsManager() {
-
-    // UserDetails admin = User.builder().username("admin")
-    // .password("{noop}admin")
-    // .roles("MANAGER", "OWNER")
-    // .build();
-
-    // return new InMemoryUserDetailsManager(admin);
-    // }
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -62,10 +53,31 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.authorizeHttpRequests(configurer -> configurer
-                // .requestMatchers("/").hasAnyRole("MANAGER", "OWNER", "EMPLOYEE", "TRAINER",
-                // "GYMMER")
-                .requestMatchers("/").permitAll()
-                .requestMatchers("/members/**").hasAnyRole("OWNER", "MANAGER", "TRAINER", "EMPLOYEE")
+
+                .requestMatchers("/dashboard/**").hasAnyRole("OWNER", "MANAGER", "TRAINER", "EMPLOYEE")
+                .requestMatchers("/members/retrieve").hasAnyRole("OWNER", "MANAGER", "TRAINER", "EMPLOYEE") // read
+                                                                                                            // members
+                .requestMatchers("/members/**").hasAnyRole("OWNER", "MANAGER") // include: update, delete
+
+                .requestMatchers("/register/staffForm").hasAnyRole("OWNER", "MANAGER") // add staffs
+                .requestMatchers("/staffs/**").hasAnyRole("OWNER", "MANAGER") // staffs: retrieve, update, delete
+
+                .requestMatchers("/work-schedule/retrieve").hasAnyRole("OWNER", "MANAGER", "TRAINER", "EMPLOYEE")
+                .requestMatchers("/work-schedule/**").hasAnyRole("OWNER", "MANAGER") // ws: add, update, delete
+
+                .requestMatchers("/trainings/retrieve").hasAnyRole("OWNER", "MANAGER", "TRAINER", "EMPLOYEE")
+                .requestMatchers("/trainings/**").hasAnyRole("OWNER", "MANAGER", "TRAINER") // trainings: add, update,
+                                                                                            // delete
+
+                .requestMatchers("/memberships/retrieve").hasAnyRole("OWNER", "MANAGER", "TRAINER", "EMPLOYEE")
+                .requestMatchers("/memberships/**").hasAnyRole("OWNER") // memberships: add
+
+                .requestMatchers("/access-log/**").hasAnyRole("OWNER", "MANAGER") // accessLog: read, add
+                .requestMatchers("/manufactures/**").hasAnyRole("OWNER", "MANAGER") // equipment: read, add, update,
+                                                                                    // delete
+                .requestMatchers("/equipment/**").hasAnyRole("OWNER", "MANAGER") // equipment: read, add, update, delete
+                .requestMatchers("/transactions/**").hasAnyRole("OWNER", "MANAGER") // transactions: read, add
+
                 // .anyRequest().authenticated())
                 .anyRequest().permitAll())
                 .formLogin(form -> form
@@ -75,8 +87,6 @@ public class SecurityConfig {
                         .permitAll())
                 .logout(logout -> logout.permitAll().logoutSuccessHandler(new CustomLogoutSuccessHandler()))
                 .exceptionHandling(configurer -> configurer.accessDeniedPage("/access-denied"));
-        // .exceptionHandling((exceptionHandling) -> exceptionHandling
-        // .accessDeniedPage("/access-denied"));
 
         http.httpBasic(Customizer.withDefaults());
 
