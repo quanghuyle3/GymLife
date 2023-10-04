@@ -53,11 +53,19 @@ public class TrainingController {
     }
 
     @GetMapping("/retrieve")
-    public String retrieveAllTrainings(Model theModel) {
+    public String retrieveAllTrainings(Model theModel, String successMessage, String successfulUpdate,
+            String successfulDelete) {
 
         List<Training> allTraining = appDAO.retrieveAllTraining();
 
         theModel.addAttribute("trainings", allTraining);
+        if (successMessage != null) {
+            theModel.addAttribute("successMessage", successMessage);
+        } else if (successfulUpdate != null) {
+            theModel.addAttribute("successfulUpdate", successfulUpdate);
+        } else if (successfulDelete != null) {
+            theModel.addAttribute("successfulDelete", successfulDelete);
+        }
 
         return "retrieve/trainings-retrieve";
     }
@@ -110,13 +118,69 @@ public class TrainingController {
         }
 
         // add message
-        theModel.addAttribute("successMessage", "Successfully added a training log - ID: " + training.getId());
+        String successMessage = "Successfully added a training log - ID: " + training.getId();
 
-        // retrieve all work schedule before returning to the retrieve page
-        List<Training> allTraining = appDAO.retrieveAllTraining();
-        theModel.addAttribute("trainings", allTraining);
+        return retrieveAllTrainings(theModel, successMessage, null, null);
+    }
 
-        return "retrieve/trainings-retrieve";
+    @GetMapping("/update")
+    public String updateATraining(@RequestParam("trainingId") int trainingId, Model theModel) {
+        // retrieve the training need to be updated
+        Training theTraining = appDAO.findTrainingById(trainingId);
+
+        // convert work schedule to webWorkSchedule to display in template
+        WebTraining webTraining = new WebTraining(theTraining,
+                memberDAO.retrieveAllTrainers(), memberDAO.retrieveAllGymmers());
+
+        // add to model attribute to display in view
+        theModel.addAttribute("webTraining", webTraining);
+
+        return "update/training-update";
+    }
+
+    @PostMapping("/update/process")
+    public String processUpdate(@Valid @ModelAttribute("webTraining") WebTraining theWebTraining,
+            BindingResult theBindingResult, Model theModel) {
+        // form validation
+        if (theBindingResult.hasErrors()) {
+            System.out.println(theBindingResult.getAllErrors().toString());
+            System.out.println(" FORM VALIDATION");
+            // set the list of all trainers and students again before returning the view
+            theWebTraining.setPreTrainerList(memberDAO.retrieveAllTrainers());
+            theWebTraining.setPreStudentList(memberDAO.retrieveAllGymmers());
+
+            return "update/training-update";
+        }
+
+        // retrieve the training
+        Training training = appDAO.findTrainingById(theWebTraining.getId());
+        if (training == null) {
+            String successfulDelete = "Sorry... This training log doesn't exist anymore.";
+            return retrieveAllTrainings(theModel, null, null, successfulDelete);
+        }
+
+        training.setTrainerId(memberDAO.findMemberById(theWebTraining.getTrainerId()));
+        training.setStudentId(memberDAO.findMemberById(theWebTraining.getStudentId()));
+        training.setDateStart(theWebTraining.getDateStart());
+        training.setDateEnd(theWebTraining.getDateEnd());
+
+        // save the shift
+        // check for violation constraint
+        try {
+            appDAO.update(training);
+        } catch (JpaSystemException e) {
+            theModel.addAttribute("violationConstraint", "Error: There is conflict in time/date. Please try again.");
+
+            // set the list of all trainers and students again before returning the view
+            theWebTraining.setPreTrainerList(memberDAO.retrieveAllTrainers());
+            theWebTraining.setPreStudentList(memberDAO.retrieveAllGymmers());
+            return "update/training-update";
+        }
+
+        // add message
+        String successfulUpdate = "Successfully updated a training log - ID: " + training.getId();
+
+        return retrieveAllTrainings(theModel, null, successfulUpdate, null);
     }
 
     @GetMapping("delete")
@@ -124,14 +188,9 @@ public class TrainingController {
 
         appDAO.deleteTrainingById(trainingId);
 
-        // retrieve all training before returning to the retrieve page
-        List<Training> allTraining = appDAO.retrieveAllTraining();
-        theModel.addAttribute("trainings", allTraining);
+        String successfulDelete = "Successfully deleted schedule ID: " + trainingId;
 
-        String message = "Successfully deleted schedule ID: " + trainingId;
-        theModel.addAttribute("successfulDelete", message);
-
-        return "retrieve/trainings-retrieve";
+        return retrieveAllTrainings(theModel, null, null, successfulDelete);
     }
 
 }

@@ -119,10 +119,6 @@ public class RegistrationController {
 
         logger.info("Successfully created user: " + userName);
 
-        // place a charge on new member / process a transaction
-        // (happened inside userService.save())
-
-        // return "/register/member-confirmation";
         return redirectAfterRegister(newMember.getId(), principal, theModel);
     }
 
@@ -135,7 +131,6 @@ public class RegistrationController {
         WebStaff webStaff = new WebStaff();
         webStaff.setPreRoleStrings(roleDAO.retrieveAllStaffRoleStrings());
         theModel.addAttribute("webMember", webStaff);
-        // return "register/member-form";
         return "register/staff-form";
     }
 

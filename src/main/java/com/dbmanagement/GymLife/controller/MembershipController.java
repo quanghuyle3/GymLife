@@ -53,16 +53,24 @@ public class MembershipController {
     }
 
     @GetMapping("/retrieve")
-    public String retrieveAllMemberships(Model theModel) {
+    public String retrieveAllMemberships(Model theModel, String successMessage, String successfulUpdate,
+            String successfulDelete) {
 
         List<Membership> allMemberships = appDAO.retrieveAllMembership();
 
         theModel.addAttribute("memberships", allMemberships);
+        if (successMessage != null) {
+            theModel.addAttribute("successMessage", successMessage);
+        } else if (successfulUpdate != null) {
+            theModel.addAttribute("successfulUpdate", successfulUpdate);
+        } else if (successfulDelete != null) {
+            theModel.addAttribute("successfulDelete", successfulDelete);
+        }
 
         return "retrieve/memberships-retrieve";
     }
 
-    @GetMapping("add-membership")
+    @GetMapping("/add-membership")
     public String showMembershipForm(Model theModel) {
         WebMembership webMembership = new WebMembership();
         theModel.addAttribute("webMembership", webMembership);
@@ -70,7 +78,7 @@ public class MembershipController {
         return "add/membership-form";
     }
 
-    @PostMapping("membership-process")
+    @PostMapping("/membership-process")
     public String processMembership(@Valid @ModelAttribute("webMembership") WebMembership theWebMembership,
             BindingResult theBindingResult, Model theModel) {
 
@@ -104,16 +112,67 @@ public class MembershipController {
         appDAO.save(membership);
 
         // add message
-        theModel.addAttribute("successMessage", "Successfully added a new Membership - ID: " + membership.getId());
+        String successMessage = "Successfully added a new Membership - ID: " + membership.getId();
 
-        // retrieve all memberships before returning to the retrieve page
-        List<Membership> allMemberships = appDAO.retrieveAllMembership();
-        theModel.addAttribute("memberships", allMemberships);
-
-        return "retrieve/memberships-retrieve";
+        return retrieveAllMemberships(theModel, successMessage, null, null);
     }
 
-    @GetMapping("delete")
+    @GetMapping("/update")
+    public String updateAMembership(@RequestParam("membershipId") int membershipId, Model theModel) {
+
+        // retrieve the membership
+        Membership membership = appDAO.findMembershipById(membershipId);
+
+        // convert to web object
+        WebMembership theWebMembership = new WebMembership(membership);
+
+        theModel.addAttribute("webMembership", theWebMembership);
+
+        return "update/membership-update";
+    }
+
+    @PostMapping("/update/process")
+    public String processUpdate(@Valid @ModelAttribute("webMembership") WebMembership theWebMembership,
+            BindingResult theBindingResult, Model theModel) {
+
+        // form validation
+        if (theBindingResult.hasErrors()) {
+            return "update/membership-update";
+        }
+
+        // retrieve membership
+        System.out.println("MEMBERSHIP ID: " + theWebMembership.getId());
+        Membership membership = appDAO.findMembershipById(theWebMembership.getId());
+        if (membership == null) {
+            String successfulDelete = "Sorry... This Membership doesn't exist anymore.";
+            return retrieveAllMemberships(theModel, null, null, successfulDelete);
+        }
+
+        // check if this membership name exists
+        Membership exist = appDAO.findMembershipByName(theWebMembership.getTypeName());
+        if (exist != null && membership != exist) {
+            theModel.addAttribute("existingError", "Error: This membership name is existed.");
+            return "update/membership-update";
+        }
+
+        try {
+            membership.setTypeName(theWebMembership.getTypeName());
+            membership.setPrice(Double.parseDouble(theWebMembership.getPrice()));
+        } catch (NumberFormatException e) {
+            theModel.addAttribute("formatError", "Error: Incorrect price format.");
+            return "update/membership-update";
+        }
+
+        // update this new membership
+        appDAO.update(membership);
+
+        // add message
+        String successfulUpdate = "Successfully updated a Membership - ID: " + membership.getId();
+
+        return retrieveAllMemberships(theModel, null, successfulUpdate, null);
+    }
+
+    @GetMapping("/delete")
     public String deleteAMembership(@RequestParam("membershipId") int membershipId, Model theModel) {
 
         appDAO.deleteMembershipById(membershipId);
@@ -122,10 +181,8 @@ public class MembershipController {
         List<Membership> allMemberships = appDAO.retrieveAllMembership();
         theModel.addAttribute("memberships", allMemberships);
 
-        String message = "Successfully deleted membership ID: " + membershipId;
-        theModel.addAttribute("successfulDelete", message);
-
-        return "retrieve/memberships-retrieve";
+        String successfulDelete = "Successfully deleted membership ID: " + membershipId;
+        return retrieveAllMemberships(theModel, null, null, successfulDelete);
     }
 
 }

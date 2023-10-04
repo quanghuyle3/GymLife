@@ -56,11 +56,19 @@ public class WorkScheduleController {
     }
 
     @GetMapping("/retrieve")
-    public String retrieveAllWorkSchedule(Model theModel) {
+    public String retrieveAllWorkSchedule(Model theModel, String successMessage, String successfulUpdate,
+            String successfulDelete) {
 
         List<WorkSchedule> allWorkSchedule = appDAO.retrieveAllWorkSchedule();
 
         theModel.addAttribute("workSchedule", allWorkSchedule);
+        if (successMessage != null) {
+            theModel.addAttribute("successMessage", successMessage);
+        } else if (successfulUpdate != null) {
+            theModel.addAttribute("successfulUpdate", successfulUpdate);
+        } else if (successfulDelete != null) {
+            theModel.addAttribute("successfulDelete", successfulDelete);
+        }
 
         return "retrieve/work-schedule-retrieve";
     }
@@ -109,28 +117,76 @@ public class WorkScheduleController {
         }
 
         // add message
-        theModel.addAttribute("successfulSchedule", "Successfully scheduled a shift - ID: " + ws.getId());
+        String successMessage = "Successfully scheduled a shift - ID: " + ws.getId();
 
-        // retrieve all work schedule before returning to the retrieve page
-        List<WorkSchedule> allWorkSchedule = appDAO.retrieveAllWorkSchedule();
-        theModel.addAttribute("workSchedule", allWorkSchedule);
-
-        return "retrieve/work-schedule-retrieve";
+        return retrieveAllWorkSchedule(theModel, successMessage, null, null);
     }
 
-    @GetMapping("delete")
+    @GetMapping("/update")
+    public String updateAWorkSchedule(@RequestParam("wsId") int wsId, Model theModel) {
+
+        // retrieve the work schedule need to be updated
+        WorkSchedule theWorkSchedule = appDAO.findWorkScheduleById(wsId);
+
+        // convert work schedule to webWorkSchedule to display in template
+        WebWorkSchedule webWorkSchedule = new WebWorkSchedule(theWorkSchedule,
+                memberDAO.retrieveAllStaffsWithoutOwner(), this.getTimeStringsInADay());
+
+        // add to model attribute to display in view
+        theModel.addAttribute("webWorkSchedule", webWorkSchedule);
+
+        return "update/work-schedule-update";
+    }
+
+    @PostMapping("/update/process")
+    public String processUpdate(@Valid @ModelAttribute("webWorkSchedule") WebWorkSchedule theWebWorkSchedule,
+            BindingResult theBindingResult, Model theModel) {
+
+        // form validation - only if form sent has any field with type text
+
+        // retrieve the current work schedule
+        WorkSchedule ws = appDAO.findWorkScheduleById(theWebWorkSchedule.getId());
+
+        // it should have a variable String error var to pass in constructor,
+        // if don't have, we can reuse another String var to hold message
+        // which happening in this case
+        if (ws == null) {
+            String successfulDelete = "Sorry... This work schedule doesn't exist anymore.";
+            return retrieveAllWorkSchedule(theModel, null, null, successfulDelete);
+        }
+
+        // update with new info
+        ws.setStaffId(memberDAO.findMemberById(theWebWorkSchedule.getStaffId()));
+        ws.setWorkDate(theWebWorkSchedule.getWorkDate());
+        ws.setTimeStart(theWebWorkSchedule.getTimeStart());
+        ws.setTimeEnd(theWebWorkSchedule.getTimeEnd());
+
+        // save the shift
+        // check for violation constraint
+        try {
+            appDAO.update(ws);
+        } catch (JpaSystemException e) {
+            theModel.addAttribute("violationConstraint", "Error: There is conflict in time/date. Please try again.");
+
+            // set the list of all staffs and time strings again before returning the view
+            theWebWorkSchedule.setPreStaffList(memberDAO.retrieveAllStaffsWithoutOwner());
+            theWebWorkSchedule.setPreTimeStrings(getTimeStringsInADay());
+            return "update/work-schedule-update";
+        }
+
+        // add message
+        String successfulUpdate = "Successfully updated a shift - ID: " + ws.getId();
+
+        return retrieveAllWorkSchedule(theModel, null, successfulUpdate, null);
+    }
+
+    @GetMapping("/delete")
     public String deleteAWorkSchedule(@RequestParam("wsId") int wsId, Model theModel) {
 
         appDAO.deleteWorkScheduleById(wsId);
 
-        // retrieve all work schedule before returning to the retrieve page
-        List<WorkSchedule> allWorkSchedule = appDAO.retrieveAllWorkSchedule();
-        theModel.addAttribute("workSchedule", allWorkSchedule);
-
-        String message = "Successfully deleted schedule ID: " + wsId;
-        theModel.addAttribute("successfulDelete", message);
-
-        return "retrieve/work-schedule-retrieve";
+        String successfulDelete = "Successfully deleted schedule ID: " + wsId;
+        return retrieveAllWorkSchedule(theModel, null, null, successfulDelete);
     }
 
     private List<String> getTimeStringsInADay() {

@@ -56,11 +56,14 @@ public class TransactionController {
     }
 
     @GetMapping("/retrieve")
-    public String retrieveAllTransactions(Model theModel) {
+    public String retrieveAllTransactions(Model theModel, String successMessage) {
 
         List<Transaction> allTransactions = appDAO.retrieveAllTransaction();
 
         theModel.addAttribute("transactions", allTransactions);
+        if (successMessage != null) {
+            theModel.addAttribute("successMessage", successMessage);
+        }
 
         return "retrieve/transactions-retrieve";
     }
@@ -111,13 +114,9 @@ public class TransactionController {
         appDAO.save(transaction);
 
         // add message
-        theModel.addAttribute("successMessage", "Successfully proceed a transaction - ID: " + transaction.getId());
+        String successMessage = "Successfully proceed a transaction - ID: " + transaction.getId();
 
-        // retrieve all transactions before returning to the retrieve page
-        List<Transaction> allTransactions = appDAO.retrieveAllTransaction();
-        theModel.addAttribute("transactions", allTransactions);
-
-        return "retrieve/transactions-retrieve";
+        return retrieveAllTransactions(theModel, successMessage);
     }
 
 }

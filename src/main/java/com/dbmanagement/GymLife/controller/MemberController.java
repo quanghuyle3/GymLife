@@ -15,7 +15,6 @@ import com.dbmanagement.GymLife.dao.RoleDAO;
 import com.dbmanagement.GymLife.entity.Member;
 import com.dbmanagement.GymLife.service.UserService;
 import com.dbmanagement.GymLife.webObject.WebMember;
-import com.dbmanagement.GymLife.webObject.WebStaff;
 
 @Controller
 @RequestMapping("/members")
@@ -35,11 +34,19 @@ public class MemberController {
     }
 
     @GetMapping("/retrieve")
-    public String retrieveAllMembers(Model theModel) {
-        List<Member> allMembers = memberDAO.retrieveAllGymmers();
+    public String retrieveAllMembers(Model theModel, String successfulRegistration, String successfulUpdate,
+            String successfulDelete) {
+        List<Member> allMembers = memberDAO.retrieveAllGymmersDESC();
 
         // add this object attribute values to spring model attribute
         theModel.addAttribute("members", allMembers);
+        if (successfulRegistration != null) {
+            theModel.addAttribute("successMessage", successfulRegistration);
+        } else if (successfulUpdate != null) {
+            theModel.addAttribute("successfulUpdate", successfulUpdate);
+        } else if (successfulDelete != null) {
+            theModel.addAttribute("successfulDelete", successfulDelete);
+        }
         return "retrieve/members-retrieve";
     }
 
@@ -50,25 +57,14 @@ public class MemberController {
         // retrieve the member need to be update
         Member theMember = memberDAO.findMemberById(memberId);
 
-        if (theMember.checkContainARole(roleDAO.findRoleByName("ROLE_GYMMER"))) {
-            // convert member to webMember to display in template
-            WebMember webMember = new WebMember(theMember,
-                    appDAO.retrieveAllMembershipTypes());
+        // convert member to webMember to display in template
+        WebMember webMember = new WebMember(theMember,
+                appDAO.retrieveAllMembershipTypes());
 
-            // add to model attribute to display in view
-            theModel.addAttribute("webMember", webMember);
+        // add to model attribute to display in view
+        theModel.addAttribute("webMember", webMember);
 
-            return "update/member-update";
-        } else {
-            // convert member to webStaff to display in template
-            WebStaff webStaff = new WebStaff(theMember,
-                    roleDAO.retrieveAllStaffRoleStrings());
-
-            // add to model attribute to display in view
-            theModel.addAttribute("webMember", webStaff);
-
-            return "update/staff-update";
-        }
+        return "update/member-update";
     }
 
     @GetMapping("delete")
@@ -77,15 +73,10 @@ public class MemberController {
         // (to avoid conflict in SQL table)
         // So only preceed this if a member request to delete their personal data from
         // the system.
-        System.out.println("Deleting member: " + memberId);
         userService.delete(memberId);
 
-        List<Member> allMembers = memberDAO.retrieveAllGymmers();
-        theModel.addAttribute("members", allMembers);
-        String message = "Successfully deleted member: " + memberId;
-        theModel.addAttribute("successfulDelete", message);
-
-        return "retrieve/members-retrieve";
+        String successfulDelete = "Successfully deleted member: " + memberId;
+        return retrieveAllMembers(theModel, null, null, successfulDelete);
     }
 
 }

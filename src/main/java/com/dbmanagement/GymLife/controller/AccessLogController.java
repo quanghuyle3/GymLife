@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dbmanagement.GymLife.entity.AccessLog;
+import com.dbmanagement.GymLife.service.AccessLogService;
 import com.dbmanagement.GymLife.webObject.WebAccessLog;
 
-import org.hibernate.exception.DataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
@@ -33,12 +33,14 @@ public class AccessLogController {
     public AppDAO appDAO;
     public MemberDAO memberDAO;
     public RoleDAO roleDAO;
+    public AccessLogService accessLogService;
 
     @Autowired
-    public AccessLogController(AppDAO appDAO, MemberDAO memberDAO, RoleDAO roleDAO) {
+    public AccessLogController(AppDAO appDAO, MemberDAO memberDAO, RoleDAO roleDAO, AccessLogService accessLogService) {
         this.appDAO = appDAO;
         this.memberDAO = memberDAO;
         this.roleDAO = roleDAO;
+        this.accessLogService = accessLogService;
     }
 
     @InitBinder
@@ -55,11 +57,15 @@ public class AccessLogController {
     }
 
     @GetMapping("/retrieve")
-    public String retrieveAllAccessLogs(Model theModel) {
+    public String retrieveAllAccessLogs(Model theModel, String successMessage) {
 
-        List<AccessLog> allAccessLog = appDAO.retrieveAllAccessLog();
+        List<AccessLog> allAccessLog = appDAO.retrieve1000AccessLog();
 
         theModel.addAttribute("accessLog", allAccessLog);
+
+        if (successMessage != null) {
+            theModel.addAttribute("successMessage", successMessage);
+        }
 
         return "retrieve/access-log-retrieve";
     }
@@ -75,7 +81,7 @@ public class AccessLogController {
     }
 
     @PostMapping("access-log-process")
-    public String processMembership(@Valid @ModelAttribute("webAccessLog") WebAccessLog theWebAccessLog,
+    public String processAccessLog(@Valid @ModelAttribute("webAccessLog") WebAccessLog theWebAccessLog,
             BindingResult theBindingResult, Model theModel) {
 
         // form validation
@@ -104,14 +110,9 @@ public class AccessLogController {
             return "add/access-log-form";
         }
 
-        // add message
-        theModel.addAttribute("successMessage", "Successfully added an access log - ID: " + accessLog.getId());
+        String successMessage = "Successfully added an access log - ID: " + accessLog.getId();
 
-        // retrieve all access log before returning to the retrieve page
-        List<AccessLog> allAccessLog = appDAO.retrieveAllAccessLog();
-        theModel.addAttribute("accessLog", allAccessLog);
-
-        return "retrieve/access-log-retrieve";
+        return retrieveAllAccessLogs(theModel, successMessage);
     }
 
     private List<String> getTimeStringsInADay() {

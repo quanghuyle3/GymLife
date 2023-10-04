@@ -92,17 +92,6 @@ public class UpdateController {
             return "update/member-update";
         }
 
-        // Already DISALLOW change on username from form (UI)
-        // // check if username already exists in database
-        // Member existing = userService.findByUserName(theWebMember.getUserName());
-        // if (existing != null && existing != currentUpdatingMember) {
-
-        // // bind the error message to a model attribute to display in View
-        // theModel.addAttribute("registrationError", "Username already exists.");
-
-        // return "member-update";
-        // }
-
         // check if bank number is already in database
         String bankAccountNumber = theWebMember.getBankAccountNumber();
         BankAccount bankAccount = appDAO.findBankAccountByAccountNumber(bankAccountNumber);
@@ -117,8 +106,6 @@ public class UpdateController {
             // bind the error message to a model attribute to display in View
             theModel.addAttribute("registrationError", "Bank account number already associated with another member.");
 
-            // // set the list of membership types again before returning the view
-            // theWebMember.setPreMembershipTypes(appDAO.retrieveAllMembershipTypes());
             return "update/member-update";
         }
 

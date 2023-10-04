@@ -56,16 +56,24 @@ public class EquipmentController {
     }
 
     @GetMapping("/retrieve")
-    public String retrieveAllEquipment(Model theModel) {
+    public String retrieveAllEquipment(Model theModel, String successMessage, String successfulUpdate,
+            String successfulDelete) {
 
         List<Equipment> allEquipment = appDAO.retrieveAllEquipment();
 
         theModel.addAttribute("equipment", allEquipment);
+        if (successMessage != null) {
+            theModel.addAttribute("successMessage", successMessage);
+        } else if (successfulUpdate != null) {
+            theModel.addAttribute("successfulUpdate", successfulUpdate);
+        } else if (successfulDelete != null) {
+            theModel.addAttribute("successfulDelete", successfulDelete);
+        }
 
         return "retrieve/equipment-retrieve";
     }
 
-    @GetMapping("add-equipment")
+    @GetMapping("/add-equipment")
     public String showEquipmentForm(Model theModel) {
         WebEquipment webEquipment = new WebEquipment();
         webEquipment.setPreTransactionList(retrieveAvailableTransactionsPaidToManufacture());
@@ -76,15 +84,14 @@ public class EquipmentController {
         return "add/equipment-form";
     }
 
-    @PostMapping("equipment-process")
-    public String processTransaction(@Valid @ModelAttribute("webEquipment") WebEquipment theWebEquipment,
+    @PostMapping("/equipment-process")
+    public String processEquipment(@Valid @ModelAttribute("webEquipment") WebEquipment theWebEquipment,
             BindingResult theBindingResult, Model theModel) {
 
         // form validation
         if (theBindingResult.hasErrors()) {
             theWebEquipment.setPreTransactionList(retrieveAvailableTransactionsPaidToManufacture());
             theWebEquipment.setPreTargetList(retrieveTargetList());
-            System.out.println("Transaction ID: " + theWebEquipment.getTransactionId());
 
             return "add/equipment-form";
         }
@@ -105,17 +112,60 @@ public class EquipmentController {
         appDAO.save(equipment);
 
         // add message
-        theModel.addAttribute("successMessage",
-                "Successfully added an imported equipment - ID: " + equipment.getSerials());
-
-        // retrieve all equipment before returning to page
-        List<Equipment> allEquipment = appDAO.retrieveAllEquipment();
-        theModel.addAttribute("equipment", allEquipment);
-
-        return "retrieve/equipment-retrieve";
+        String successMessage = "Successfully added an imported equipment - ID: " + equipment.getSerials();
+        return retrieveAllEquipment(theModel, successMessage, null, null);
     }
 
-    @GetMapping("delete")
+    @GetMapping("/update")
+    public String updateAnEquipment(@RequestParam("equipmentSerials") String equipmentSerials, Model theModel) {
+
+        // retrieve the equipment need to be updated
+        Equipment theEquipment = appDAO.findEquipmentBySerials(equipmentSerials);
+
+        // convert equipment to webEquipment to display in template
+        WebEquipment webEquipment = new WebEquipment(theEquipment, retrieveAvailableTransactionsPaidToManufacture(),
+                retrieveTargetList());
+
+        // add to model attribute to display in view
+        theModel.addAttribute("webEquipment", webEquipment);
+
+        return "update/equipment-update";
+    }
+
+    @PostMapping("/update/process")
+    public String processUpdate(@Valid @ModelAttribute("webEquipment") WebEquipment theWebEquipment,
+            BindingResult theBindingResult, Model theModel) {
+
+        // form validation
+        if (theBindingResult.hasErrors()) {
+            theWebEquipment.setPreTransactionList(retrieveAvailableTransactionsPaidToManufacture());
+            theWebEquipment.setPreTargetList(retrieveTargetList());
+            return "update/equipment-update";
+        }
+
+        // retrieve the equipment
+        Equipment equipment = appDAO.findEquipmentBySerials(theWebEquipment.getSerials());
+        if (equipment == null) {
+            String successfulDelete = "Error: This Equipment isn't existed in database anymore. Someone already deleted it!";
+            return retrieveAllEquipment(theModel, null, null, successfulDelete);
+        }
+
+        // equipment.setSerials(theWebEquipment.getSerials()); // this field won't
+        // change since it it set to 'readonly' in update view
+        equipment.setName(theWebEquipment.getName());
+        equipment.setTransactionId(appDAO.findTransactionById(theWebEquipment.getTransactionId()));
+        equipment.setTarget(theWebEquipment.getTarget());
+        equipment.setDateImported(theWebEquipment.getDateImported());
+
+        // save this new equipment
+        appDAO.update(equipment);
+
+        // add message
+        String successfulUpdate = "Successfully updated an equipment - Serials: " + equipment.getSerials();
+        return retrieveAllEquipment(theModel, null, successfulUpdate, null);
+    }
+
+    @GetMapping("/delete")
     public String deleteAnEquipment(@RequestParam("equipmentSerials") String equipmentSerials, Model theModel) {
 
         Equipment equipment = appDAO.findEquipmentBySerials(equipmentSerials);
@@ -123,14 +173,9 @@ public class EquipmentController {
 
         appDAO.deleteEquipmentBySerials(equipmentSerials);
 
-        // retrieve all equipment before returning to the retrieve page
-        List<Equipment> allEquipment = appDAO.retrieveAllEquipment();
-        theModel.addAttribute("equipment", allEquipment);
-
-        String message = "Successfully deleted equipment ID: " + equipmentSerials;
-        theModel.addAttribute("successfulDelete", message);
-
-        return "retrieve/equipment-retrieve";
+        // add message
+        String successfulDelete = "Successfully deleted equipment ID: " + equipmentSerials;
+        return retrieveAllEquipment(theModel, null, null, successfulDelete);
     }
 
     // filter only transactions that are not linked to any paid equipment
