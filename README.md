@@ -6,6 +6,7 @@ This is a dynamic web application developed to enhance the management processes 
 
 ## Features
 - Registration and login for members and staff.
+- Display statistics with different Charts using data from the database.
 - REST API to manage members (add, update, delete).
 - REST API to manage work schedules.
 - REST API for trainings.
@@ -14,9 +15,10 @@ This is a dynamic web application developed to enhance the management processes 
 - REST API for manufactures.
 - REST API for equipment.
 - REST API for transactions.
+- REST API for bank accounts.
 
 
-## Framework and Technologies
+## Framework and Tech Stacks
 - Spring Boot
 - Java
 - MySQL
