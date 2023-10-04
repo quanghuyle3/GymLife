@@ -8,7 +8,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Template</title>
+    <title>Gymlife</title>
 
     <link rel="shortcut icon" href="/images/logo/tiny_g.png" type="image/png" />
 
@@ -20,8 +20,6 @@
     />
 
     <link rel="stylesheet" href="/css/MoreStyles.css" />
-
-    <link th:href="@{/images/icon/icons.svg}" rel="preload" as="image" />
   </head>
 
   <body>
@@ -32,7 +30,7 @@
         <div
           class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start"
         >
-          <a href="/template" class="d-flex align-items-center mb-2 mb-lg-0">
+          <a href="/" class="d-flex align-items-center mb-2 mb-lg-0">
             <img
               class="main-logo"
               src="/images/logo/small_logo.png"
@@ -47,17 +45,17 @@
               <a href="/" class="nav-link px-2 text-white">HOME</a>
             </li>
             <li>
-              <a href="/template" class="nav-link px-2 text-white"
+              <a href="/membership" class="nav-link px-2 text-white"
                 >MEMBERSHIP</a
               >
             </li>
             <li>
-              <a href="/" class="nav-link px-2 text-white">CONTACT</a>
+              <a href="/contact" class="nav-link px-2 text-white">CONTACT</a>
             </li>
           </ul>
 
           <form
-            action="/template"
+            action="/search"
             class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3"
             role="search"
           >
@@ -70,7 +68,9 @@
           </form>
 
           <div sec:authorize="!isAuthenticated()" class="text-end">
-            <a href="/" class="btn btn-outline-light custom-bg-tertiary me-2"
+            <a
+              href="/register"
+              class="btn btn-outline-light custom-bg-tertiary me-2"
               >JOIN NOW</a
             >
             <a href="/login" class="btn btn-outline-light">LOGIN</a>
@@ -85,7 +85,7 @@
               aria-expanded="false"
             >
               <img
-                src="/images/icon/hair-icon.png"
+                src="/images/avatar/default-ava.png"
                 alt="Ava"
                 width="40px"
                 height="40px"
@@ -93,9 +93,16 @@
               />
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              <li><a class="dropdown-item" href="#">Profile</a></li>
-              <li><a class="dropdown-item" href="#">Update</a></li>
-              <li><a class="dropdown-item" href="#">Something else</a></li>
+              <li>
+                <a class="dropdown-item" href="" th:href="@{/my-profile/view}"
+                  >Profile</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item" href="" th:href="@{/my-profile/update}"
+                  >Update</a
+                >
+              </li>
               <li><hr class="dropdown-divider" /></li>
               <li>
                 <form action="#" th:action="@{/logout}" method="post">
@@ -130,26 +137,28 @@
                   <a
                     class="nav-link d-flex align-items-center gap-2 active"
                     aria-current="page"
-                    href="#"
+                    href=""
+                    th:href="@{/my-profile/view}"
                   >
                     <img
                       class="bi"
-                      src="/images/icon/hair-icon.png"
-                      alt="hair icon"
-                    />
-                    Member</a
-                  >
+                      src="/images/avatar/default-ava.png"
+                      alt="DefaultAvatar" />
+                    <span
+                      th:text="${#authentication.principal.firstName + ' ' + #authentication.principal.lastName}"
+                    ></span
+                  ></a>
                 </li>
                 <li class="nav-item">
                   <a
                     class="nav-link d-flex align-items-center gap-2 active"
                     aria-current="page"
-                    href="/"
+                    href="/dashboard"
                   >
                     <img
                       class="bi"
-                      src="/images/icon/hair-icon.png"
-                      alt="hair icon"
+                      src="/images/icon/dashboard-icon.png"
+                      alt="DashboardIcon"
                     />
                     Dashboard</a
                   >
@@ -167,12 +176,12 @@
                   <a
                     class="nav-link d-flex align-items-center gap-2 active"
                     aria-current="page"
-                    href="#"
+                    href="/members/retrieve"
                   >
                     <img
                       class="bi"
-                      src="/images/icon/hair-icon.png"
-                      alt="hair icon"
+                      src="/images/icon/doc-icon.png"
+                      alt="DocIcon"
                     />
                     Members</a
                   >
@@ -181,12 +190,12 @@
                   <a
                     class="nav-link d-flex align-items-center gap-2 active"
                     aria-current="page"
-                    href="#"
+                    href="/staffs/retrieve"
                   >
                     <img
                       class="bi"
-                      src="/images/icon/hair-icon.png"
-                      alt="hair icon"
+                      src="/images/icon/doc-icon.png"
+                      alt="DocIcon"
                     />
                     Staffs</a
                   >
@@ -195,12 +204,12 @@
                   <a
                     class="nav-link d-flex align-items-center gap-2 active"
                     aria-current="page"
-                    href="#"
+                    href="/work-schedule/retrieve"
                   >
                     <img
                       class="bi"
-                      src="/images/icon/hair-icon.png"
-                      alt="hair icon"
+                      src="/images/icon/doc-icon.png"
+                      alt="DocIcon"
                     />
                     Work Schedule</a
                   >
@@ -209,12 +218,12 @@
                   <a
                     class="nav-link d-flex align-items-center gap-2 active"
                     aria-current="page"
-                    href="#"
+                    href="/trainings/retrieve"
                   >
                     <img
                       class="bi"
-                      src="/images/icon/hair-icon.png"
-                      alt="hair icon"
+                      src="/images/icon/doc-icon.png"
+                      alt="DocIcon"
                     />
                     Trainings</a
                   >
@@ -223,12 +232,12 @@
                   <a
                     class="nav-link d-flex align-items-center gap-2 active"
                     aria-current="page"
-                    href="#"
+                    href="/memberships/retrieve"
                   >
                     <img
                       class="bi"
-                      src="/images/icon/hair-icon.png"
-                      alt="hair icon"
+                      src="/images/icon/doc-icon.png"
+                      alt="DocIcon"
                     />
                     Memberships</a
                   >
@@ -242,12 +251,12 @@
                   <a
                     class="nav-link d-flex align-items-center gap-2 active"
                     aria-current="page"
-                    href="#"
+                    href="/access-log/retrieve"
                   >
                     <img
                       class="bi"
-                      src="/images/icon/hair-icon.png"
-                      alt="hair icon"
+                      src="/images/icon/doc-icon.png"
+                      alt="DocIcon"
                     />
                     Access Log</a
                   >
@@ -256,12 +265,26 @@
                   <a
                     class="nav-link d-flex align-items-center gap-2 active"
                     aria-current="page"
-                    href="#"
+                    href="/manufactures/retrieve"
                   >
                     <img
                       class="bi"
-                      src="/images/icon/hair-icon.png"
-                      alt="hair icon"
+                      src="/images/icon/doc-icon.png"
+                      alt="DocIcon"
+                    />
+                    Manufactures</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link d-flex align-items-center gap-2 active"
+                    aria-current="page"
+                    href="/equipment/retrieve"
+                  >
+                    <img
+                      class="bi"
+                      src="/images/icon/doc-icon.png"
+                      alt="DocIcon"
                     />
                     Equipment</a
                   >
@@ -270,12 +293,12 @@
                   <a
                     class="nav-link d-flex align-items-center gap-2 active"
                     aria-current="page"
-                    href="#"
+                    href="/transactions/retrieve"
                   >
                     <img
                       class="bi"
-                      src="/images/icon/hair-icon.png"
-                      alt="hair icon"
+                      src="/images/icon/doc-icon.png"
+                      alt="DocIcon"
                     />
                     Transactions</a
                   >
@@ -286,11 +309,34 @@
         </div>
 
         <!-- NEXT TO SIDEBAR (MAIN IN MAIN) -->
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 flex-grow-1">
           <div
             class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
           >
             <h1 class="h2">Dashboard</h1>
+          </div>
+          <div
+            sec:authorize="isAuthenticated()"
+            class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary"
+          >
+            <p>
+              User: <span sec:authentication="principal.username"></span>
+              <br /><br />
+              Role(s):
+              <span sec:authentication="principal.authorities"></span>
+              <br /><br />
+              First name:
+              <span sec:authentication="principal.firstName"></span>
+              <br /><br />
+              Last name:
+              <span sec:authentication="principal.lastName"></span>
+              <br /><br />
+              Id:
+              <span sec:authentication="principal.id"></span>
+              <br /><br />
+              Email:
+              <span sec:authentication="principal.email"></span>
+            </p>
           </div>
         </main>
       </div>

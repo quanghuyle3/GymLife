@@ -333,14 +333,14 @@
               <div>
                 <!-- Check for successful registration message -->
                 <div th:if="${successfulRegistration}">
-                  <div class="alert alert-success col-xs-offset-1 col-xs-10">
+                  <div class="alert alert-info col-xs-offset-1 col-xs-10">
                     <span th:text="${successfulRegistration}"></span>
                   </div>
                 </div>
 
                 <!-- Check for successful update message -->
                 <div th:if="${successfulUpdate}">
-                  <div class="alert alert-warning col-xs-offset-1 col-xs-10">
+                  <div class="alert alert-success col-xs-offset-1 col-xs-10">
                     <span th:text="${successfulUpdate}"></span>
                   </div>
                 </div>
@@ -379,8 +379,8 @@
                 </tr>
               </thead>
               <tbody>
-                <tr th:each="member, memberInfo : ${members}">
-                  <th scope="row" th:text="${memberInfo.count}"></th>
+                <tr th:each="member, memberIndex : ${members}">
+                  <th scope="row" th:text="${memberIndex.count}"></th>
                   <td
                     th:text="${member.active} ? 'ACTIVE' : 'CANCELLED'"
                     th:classappend="${member.active} ? 'text-success' : 'text-danger'"

@@ -332,15 +332,15 @@
             <div class="col-xs-15">
               <div>
                 <!-- Check for successful schedule message -->
-                <div th:if="${successfulSchedule}">
-                  <div class="alert alert-success col-xs-offset-1 col-xs-10">
-                    <span th:text="${successfulSchedule}"></span>
+                <div th:if="${successMessage}">
+                  <div class="alert alert-info col-xs-offset-1 col-xs-10">
+                    <span th:text="${successMessage}"></span>
                   </div>
                 </div>
 
                 <!-- Check for successful update message -->
                 <div th:if="${successfulUpdate}">
-                  <div class="alert alert-warning col-xs-offset-1 col-xs-10">
+                  <div class="alert alert-success col-xs-offset-1 col-xs-10">
                     <span th:text="${successfulUpdate}"></span>
                   </div>
                 </div>
@@ -379,8 +379,14 @@
                   <td
                     th:text="${#strings.substring(ws.workDate, 5, 7) + '/' + #strings.substring(ws.workDate, 8, 10) + '/' + #strings.substring(ws.workDate, 0, 4)}"
                   ></td>
-                  <td th:text="${ws.timeStart}" class="table-data"></td>
-                  <td th:text="${ws.timeEnd}" class="table-data"></td>
+                  <td
+                    th:text="${#strings.substring(ws.timeStart, 0, 5)}"
+                    class="table-data"
+                  ></td>
+                  <td
+                    th:text="${#strings.substring(ws.timeEnd, 0, 5)}"
+                    class="table-data"
+                  ></td>
                   <!-- <td th:text="${ws.workDate}" class="table-data"></td> -->
                   <td th:text="${ws.staffId.id}" class="table-data"></td>
                   <td

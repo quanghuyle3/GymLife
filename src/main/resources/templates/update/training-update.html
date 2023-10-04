@@ -20,6 +20,18 @@
     />
 
     <link rel="stylesheet" href="/css/MoreStyles.css" />
+
+    <script th:inline="javascript">
+      function validateCheckbox() {
+        var checkBox = document.getElementById("gridCheck");
+        if (!checkBox.checked) {
+          alert("You must agree to Terms of Services.");
+          checkBox.focus(); // Set focus on the checkbox to trigger the tooltip
+          return false;
+        }
+        return true;
+      }
+    </script>
   </head>
 
   <body>
@@ -117,7 +129,7 @@
 
     <!-- MAIN SECTION  -->
     <div class="container-fluid">
-      <div class="row">
+      <div class="row d-flex">
         <!-- SIDEBAR  -->
         <div
           sec:authorize="isAuthenticated() and !hasRole('GYMMER')"
@@ -313,131 +325,152 @@
           <div
             class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
           >
-            <h1 class="h2">Staffs</h1>
-            <div class="btn-toolbar mb-2 mb-md-0">
-              <div class="btn-group me-2">
-                <button
-                  type="button"
-                  class="btn btn-lg btn-outline-primary"
-                  onclick="window.location.href='/register/staffForm';"
+            <h1 class="h2">Update Training Log</h1>
+          </div>
+          <form
+            action="#"
+            th:action="@{/trainings/update/process}"
+            th:object="${webTraining}"
+            method="POST"
+            class=""
+          >
+            <!-- Preserve attributes in case binding result has error
+          avoiding lost data -->
+            <input
+              style="display: none"
+              type="text"
+              th:field="*{id}"
+              th:value="${webTraining.id}"
+              class="form-control"
+            />
+            <!-- Place for messages: error, alert etc ... -->
+            <!-- <div class="form-group"> -->
+            <div class="row d-flex justify-content-center">
+              <div class="col-md-5">
+                <div>
+                  <!-- Check for violation constraint message -->
+
+                  <div th:if="${violationConstraint}">
+                    <div class="alert alert-danger col-xs-offset-1 col-xs-10">
+                      <span th:text="${violationConstraint}"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- </div> -->
+            <div class="row d-flex justify-content-center">
+              <div class="col-md-5">
+                <label for="trainerInput" class="">Trainer (*)</label>
+                <select
+                  id="trainerInput"
+                  th:field="*{trainerId}"
+                  class="form-select mb-3"
                 >
-                  Add staff
+                  <option
+                    th:each="trainer : ${webTraining.preTrainerList}"
+                    th:value="${trainer.id}"
+                    th:text="${#strings.substring(trainer.roles.?[true][0].name, 5)} + ' - ' + ${trainer.id} + ' - ' + ${trainer.firstName} + ' ' + ${trainer.lastName}"
+                  ></option>
+                </select>
+                <div
+                  th:if="${#fields.hasErrors('trainerId')}"
+                  style="margin-bottom: 25px"
+                  class="text-danger"
+                >
+                  <ul>
+                    <li
+                      th:each="err : ${#fields.errors('trainerId')}"
+                      th:text="${err}"
+                    />
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="row d-flex justify-content-center">
+              <div class="col-md-5">
+                <label for="studentInput" class="">Student (*)</label>
+                <select
+                  id="studentInput"
+                  th:field="*{studentId}"
+                  class="form-select mb-3"
+                >
+                  <option
+                    th:each="student : ${webTraining.preStudentList}"
+                    th:value="${student.id}"
+                    th:text="${#strings.substring(student.roles.?[true][0].name, 5)} + ' - ' + ${student.id} + ' - ' + ${student.firstName} + ' ' + ${student.lastName}"
+                  ></option>
+                </select>
+                <div
+                  th:if="${#fields.hasErrors('studentId')}"
+                  style="margin-bottom: 25px"
+                  class="text-danger"
+                >
+                  <ul>
+                    <li
+                      th:each="err : ${#fields.errors('studentId')}"
+                      th:text="${err}"
+                    />
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="row d-flex justify-content-center">
+              <div class="col-md-5">
+                <label for="dateStartInput" class="">Date Start (*)</label>
+                <input
+                  id="dateStartInput"
+                  type="date"
+                  th:field="*{dateStart}"
+                  class="form-control mb-3"
+                />
+                <div
+                  th:if="${#fields.hasErrors('dateStart')}"
+                  style="margin-bottom: 25px"
+                  class="text-danger"
+                >
+                  <ul>
+                    <li
+                      th:each="err : ${#fields.errors('dateStart')}"
+                      th:text="${err}"
+                    />
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="row d-flex justify-content-center">
+              <div class="col-md-5">
+                <label for="dateEndInput" class="">Date End</label>
+                <input
+                  id="dateEndInput"
+                  type="date"
+                  th:field="*{dateEnd}"
+                  class="form-control mb-3"
+                />
+                <div
+                  th:if="${#fields.hasErrors('dateEnd')}"
+                  style="margin-bottom: 25px"
+                  class="text-danger"
+                >
+                  <ul>
+                    <li
+                      th:each="err : ${#fields.errors('dateEnd')}"
+                      th:text="${err}"
+                    />
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="row d-flex justify-content-center">
+              <div class="col-5 mt-2">
+                <button type="submit" class="col-12 mt-2 btn btn-primary">
+                  Update
                 </button>
               </div>
             </div>
-          </div>
-
-          <!-- Place for messages: successful registration, error, alert etc ... -->
-          <div class="form-group">
-            <div class="col-xs-15">
-              <div>
-                <!-- Check for successful registration message -->
-                <div th:if="${successfulRegistration}">
-                  <div class="alert alert-info col-xs-offset-1 col-xs-10">
-                    <span th:text="${successfulRegistration}"></span>
-                  </div>
-                </div>
-
-                <!-- Check for successful update message -->
-                <div th:if="${successfulUpdate}">
-                  <div class="alert alert-success col-xs-offset-1 col-xs-10">
-                    <span th:text="${successfulUpdate}"></span>
-                  </div>
-                </div>
-
-                <!-- Check for successful delete message -->
-                <div th:if="${successfulDelete}">
-                  <div class="alert alert-danger col-xs-offset-1 col-xs-10">
-                    <span th:text="${successfulDelete}"></span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="table-responsive small">
-            <!-- list items for table  -->
-            <!-- <table class="table table-hover table-striped table-bordered table-header"> -->
-            <table class="table table-striped table-sm">
-              <thead>
-                <tr>
-                  <th scope="col" class="table-header">#</th>
-                  <th scope="col" class="table-header">Status</th>
-                  <th scope="col" class="table-header">Member ID</th>
-                  <th scope="col" class="table-header">Role(s)</th>
-                  <th scope="col" class="table-header">First name</th>
-                  <th scope="col" class="table-header">Last name</th>
-                  <th scope="col" class="table-header">Birthdate</th>
-                  <th scope="col" class="table-header">Gender</th>
-                  <th scope="col" class="table-header">Address</th>
-                  <th scope="col" class="table-header">Email</th>
-                  <th scope="col" class="table-header">Phone</th>
-                  <th scope="col" class="table-header">Date Join</th>
-                  <th scope="col" class="table-header">Date Left</th>
-                  <th scope="col" class="table-header">Bank Account Ending</th>
-                  <th scope="col" class="table-header">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr th:each="member, memberInfo : ${members}">
-                  <th scope="row" th:text="${memberInfo.count}"></th>
-                  <td
-                    th:text="${member.active} ? 'ACTIVE' : 'CANCELLED'"
-                    th:classappend="${member.active} ? 'text-success' : 'text-danger'"
-                  ></td>
-                  <td th:text="${member.id}" class="table-data"></td>
-                  <td>
-                    <div
-                      th:each="role : ${member.roles}"
-                      th:text="${role.name}"
-                      th:if="${!#lists.isEmpty(member.roles)}"
-                    ></div>
-                  </td>
-                  <td th:text="${member.firstName}"></td>
-                  <td th:text="${member.lastName}"></td>
-                  <td
-                    th:text="${#strings.substring(member.dateOfBirth, 5, 7) + '/' + #strings.substring(member.dateOfBirth, 8, 10) + '/' + #strings.substring(member.dateOfBirth, 0, 4)}"
-                  ></td>
-                  <td th:text="${member.gender}"></td>
-                  <td th:text="${member.address}"></td>
-                  <td th:text="${member.email}"></td>
-                  <td th:text="${member.phoneNumber}"></td>
-                  <!-- <td
-                    th:text="${member.membershipType} ? ${member.membershipType.typeName} : ${member.membershipType}"
-                  ></td> -->
-                  <td
-                    th:text="${#strings.substring(member.dateJoin, 5, 7) + '/' + #strings.substring(member.dateJoin, 8, 10) + '/' + #strings.substring(member.dateJoin, 0, 4)}"
-                  ></td>
-                  <td
-                    th:text="${member.dateExpiration} ? ${#strings.substring(member.dateExpiration, 5, 7) + '/' + #strings.substring(member.dateExpiration, 8, 10) + '/' + #strings.substring(member.dateExpiration, 0, 4)} : ${member.dateExpiration}"
-                  ></td>
-                  <td
-                    th:text="${member.bankAccountNumber} ? ${'x' + #strings.substring(member.bankAccountNumber.accountNumber, #strings.length(member.bankAccountNumber.accountNumber) -4)} : ${member.bankAccountNumber}"
-                  ></td>
-                  <!-- <td>Update/Delete buttons</td> -->
-                  <td>
-                    <div class="btn-toolbar mb-2 mb-md-0">
-                      <div class="btn-group me-2">
-                        <a
-                          href=""
-                          th:href="@{/staffs/update(memberId=${member.id})}"
-                          class="btn btn-sm btn-outline-success"
-                          >Update</a
-                        >
-                        <a
-                          href=""
-                          th:href="@{/staffs/delete(memberId=${member.id})}"
-                          class="btn btn-sm btn-outline-danger"
-                          onclick="return confirm('Are you sure you want to delete this staff? (This will lead to data related to this staff being erased from the database)')"
-                          >Delete</a
-                        >
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          </form>
         </main>
       </div>
     </div>
