@@ -2,12 +2,10 @@ package com.dbmanagement.GymLife.service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -55,23 +53,6 @@ public class UserServiceImpl implements UserService {
         if (member == null) {
             throw new UsernameNotFoundException("Invalid username or password");
         }
-
-        // if (!member.isActive()) {
-        // throw new DisabledException("This user is not active.");
-        // }
-
-        // Collection<SimpleGrantedAuthority> authorities =
-        // mapRolesToAuthorities(member.getRoles());
-
-        // return new
-        // org.springframework.security.core.userdetails.User(member.getUserName(),
-        // member.getPassword(),
-        // authorities);
-        // return new
-        // org.springframework.security.core.userdetails.User(member.getUserName(),
-        // member.getPassword(),
-        // member.isActive(), true, true, true,
-        // authorities);
 
         // Create a UserDetails object with custome properties
         CustomUserDetails userDetails = new CustomUserDetails(member);
@@ -223,7 +204,7 @@ public class UserServiceImpl implements UserService {
         // Role role = roleDAO.findRoleByName(roleName);
         // member.addRole(role);
 
-        // save new member
+        // update member
         memberDAO.update(member);
     }
 
@@ -267,13 +248,13 @@ public class UserServiceImpl implements UserService {
         // Role role = roleDAO.findRoleByName(roleName);
         // member.addRole(role);
 
-        // save new member
+        // update member
         memberDAO.update(member);
     }
 
     @Override
     public void delete(int id) {
-        Member member = appDAO.findMemberById(id);
+        Member member = memberDAO.findMemberById(id);
 
         // Member member = appDAO.retrieveAMemberWithItsRoles(id); // no need to, since
         // roles are fetched eager
@@ -295,6 +276,70 @@ public class UserServiceImpl implements UserService {
         memberDAO.deleteTrainingWorkScheduleAccessLogOfAMember(id);
 
         memberDAO.deleteMemberById(id);
+    }
+
+    @Override
+    public List<Member> retrieveAllGymmers() {
+        return memberDAO.retrieveAllGymmers();
+    }
+
+    @Override
+    public List<Integer> retrieveTotalGymmersByMonth() {
+        List<Member> allGymmers = retrieveAllGymmers();
+        Integer[] membersSignUpMonthly = new Integer[] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+
+        for (Member m : allGymmers) {
+            String monthStr = m.getDateJoin().substring(5, 7);
+            int month = Integer.parseInt(monthStr);
+
+            switch (month) {
+                case 1:
+                    membersSignUpMonthly[0] += 1;
+                    break;
+                case 2:
+                    membersSignUpMonthly[1] += 1;
+                    break;
+                case 3:
+                    membersSignUpMonthly[2] += 1;
+                    break;
+                case 4:
+                    membersSignUpMonthly[3] += 1;
+                    break;
+                case 5:
+                    membersSignUpMonthly[4] += 1;
+                    break;
+                case 6:
+                    membersSignUpMonthly[5] += 1;
+                    break;
+                case 7:
+                    membersSignUpMonthly[6] += 1;
+                    break;
+                case 8:
+                    membersSignUpMonthly[7] += 1;
+                    break;
+                case 9:
+                    membersSignUpMonthly[8] += 1;
+                    break;
+                // case 10:
+                // membersSignUpMonthly[9] += 1;
+                // break;
+                // case 11:
+                // membersSignUpMonthly[10] += 1;
+                // break;
+                // case 12:
+                // membersSignUpMonthly[11] += 1;
+                // break;
+            }
+        }
+        for (int i = 1; i < 9; i++) {
+            membersSignUpMonthly[i] = membersSignUpMonthly[i] + membersSignUpMonthly[i - 1];
+        }
+        return Arrays.asList(membersSignUpMonthly);
+    }
+
+    @Override
+    public List<Member> retrieveAllStaff() {
+        return memberDAO.retrieveAllStaffsWithoutOwner();
     }
 
 }

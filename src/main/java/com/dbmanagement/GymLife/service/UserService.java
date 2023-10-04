@@ -1,5 +1,7 @@
 package com.dbmanagement.GymLife.service;
 
+import java.util.List;
+
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.dbmanagement.GymLife.entity.Member;
@@ -26,4 +28,10 @@ public interface UserService extends UserDetailsService {
     // WARNING: All Trainings, Work Schedule, Access Log associated with this member
     // will be deleted
     public void delete(int id);
+
+    public List<Member> retrieveAllGymmers();
+
+    public List<Integer> retrieveTotalGymmersByMonth();
+
+    public List<Member> retrieveAllStaff();
 }
