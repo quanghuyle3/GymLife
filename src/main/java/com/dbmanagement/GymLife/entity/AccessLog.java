@@ -42,6 +42,13 @@ public class AccessLog {
         this.timeAccessIn = timeAccessIn;
     }
 
+    public AccessLog(String date, Member memberId, String timeAccessIn, String timeAccessOut) {
+        this.date = date;
+        this.memberId = memberId;
+        this.timeAccessIn = timeAccessIn;
+        this.timeAccessOut = timeAccessOut;
+    }
+
     public int getId() {
         return id;
     }
