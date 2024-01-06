@@ -4,17 +4,16 @@ This is a dynamic web application developed to enhance the management processes 
 
 
 ## Features
-- Registration and login for members and staff.
-- Display statistics of the gym with different charts utilizing data from the database.
-- REST APIs to manage members (add, update, delete).
-- REST APIs to manage work schedules.
-- REST APIs for trainings.
-- REST APIs for memberships.
-- REST APIs for access logs.
-- REST APIs for manufactures.
-- REST APIs for equipment.
-- REST APIs for transactions.
-- REST APIs for bank accounts.
+-	Registration and login for members and staff.
+-	Display statistics of the gym utilizing data from the database.
+-	Member management (add, update, delete).
+-	Work schedule management.
+-	Training management.
+-	Membership management.
+-	Access log management.
+-	Manufacture management.
+-	Equipment management.
+-	Transaction and bank account management. 
 
 
 ## Framework and Tech Stacks
@@ -42,7 +41,7 @@ This is a dynamic web application developed to enhance the management processes 
 <img width="1100" alt="ERD" src="https://github.com/quanghuyle3/GymLife/assets/65510865/28e8b1d4-5df6-476f-945b-199351b258e2">
 
 ## Demo
-https://drive.google.com/file/d/1aaGpdwluQmrwz0006Ht1pdnrFN5S3QRt/view?usp=sharing
+https://drive.google.com/file/d/1aaGpdwluQmrwz0006Ht1pdnrFN5S3QRt/view?usp=sharing 
 
 ## Images
  Homepage
