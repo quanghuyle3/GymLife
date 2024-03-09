@@ -1,0 +1,37 @@
+version: "3"
+services:
+  gymlife-db:
+    container_name: gymlife-db-2.0 
+    image: quanghuyle3/gymlife-db:2.0 
+    ports:
+      - 3307:3306 
+    networks:
+      - gymlife-network  
+    environment:
+      MYSQL_DATABASE: gym_life
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD} 
+    # Avoid loss data if container removed 
+    volumes:  
+      - gymlife-db-data:/var/lib/mysql
+    
+  gymlife-backend:
+    container_name: gymlife-backend-2.0 
+    image: quanghuyle3/gymlife-backend:2.0 
+    ports:
+      - 8081:8080
+    networks:
+      - gymlife-network
+    environment:
+      MYSQL_HOST: gymlife-db 
+      MYSQL_PORT: 3306
+      MYSQL_USER: ${MYSQL_USER}  
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD} 
+    restart: always 
+      
+networks:
+  gymlife-network:
+    driver: bridge
+
+volumes:
+  gymlife-db-data:
+    driver: local
