@@ -45,6 +45,10 @@ Deploy the web app under a service
 Access the app using Amazon DNS
 <img width="1920" alt="access by Amazon DNS" src="https://github.com/quanghuyle3/GymLife/assets/65510865/71d56c79-977d-4862-90fb-dfc500afd6ce">
 
+## Deploy on Microsoft Azure (via Azure Container Apps)
+<img width="1910" alt="Screen Shot 2024-03-24 at 9 48 47 PM" src="https://github.com/quanghuyle3/GymLife/assets/65510865/d031e502-5539-4f60-aa94-d4d17938ee56">
+
+
 
 
 
