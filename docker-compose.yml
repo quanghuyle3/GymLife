@@ -13,6 +13,12 @@ services:
     # Avoid loss data if container removed 
     volumes:  
       - gymlife-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysql", "-uroot", "-p${MYSQL_PASSWORD}", "-e", "show databases;"]
+      interval: 10s
+      timeout: 30s
+      retries: 5
+      start_period: 10s
     
   gymlife-backend:
     container_name: gymlife-backend-2.0 
@@ -26,7 +32,10 @@ services:
       MYSQL_PORT: 3306
       MYSQL_USER: ${MYSQL_USER}  
       MYSQL_PASSWORD: ${MYSQL_PASSWORD} 
-    restart: always 
+    # restart: always 
+    depends_on:
+      gymlife-db:
+        condition: service_healthy
       
 networks:
   gymlife-network:
