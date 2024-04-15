@@ -38,11 +38,13 @@ kind: Service
 metadata:
   name: gymlife-service
 spec:
-  type: NodePort
+  # type: NodePort
+  type: LoadBalancer
   selector:
     app: gymlife
   ports:
     - protocol: TCP
-      port: 8080
+      # port: 8080
+      port: 80
       targetPort: 8080
-      nodePort: 30100
+      # nodePort: 30100
