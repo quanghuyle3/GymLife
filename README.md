@@ -37,7 +37,7 @@ https://drive.google.com/file/d/1aaGpdwluQmrwz0006Ht1pdnrFN5S3QRt/view?usp=shari
  Access Log management
 <img width="1916" alt="AccessLog management" src="https://github.com/quanghuyle3/GymLife/assets/65510865/f540b8f4-f364-4919-9ebe-28d7bea4b79d">
 
-## Deploy on Amazon Web Services
+## Deploy to cloud with Amazon Web Services (using ECS, Fargate, and Load Balancer)
 Utilize Load Balancer
 <img width="1566" alt="load balance" src="https://github.com/quanghuyle3/GymLife/assets/65510865/64574835-0518-493b-8579-315fdf02f2bb">
 Deploy the web app under a service
@@ -45,7 +45,7 @@ Deploy the web app under a service
 Access the app using Amazon DNS
 <img width="1920" alt="access by Amazon DNS" src="https://github.com/quanghuyle3/GymLife/assets/65510865/71d56c79-977d-4862-90fb-dfc500afd6ce">
 
-## Deploy on Microsoft Azure (via Azure Container Apps)
+## Deploy to cloud with Microsoft Azure (via Azure Container Apps)
 <img width="1910" alt="Screen Shot 2024-03-24 at 9 48 47 PM" src="https://github.com/quanghuyle3/GymLife/assets/65510865/d031e502-5539-4f60-aa94-d4d17938ee56">
 
 
